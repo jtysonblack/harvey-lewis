@@ -6,15 +6,27 @@ import Footer from '../components/Footer.astro';
 const sponsors = [
   {
     name: 'Newton Running',
+    slug: 'newton',
     url: 'https://www.newtonrunning.com',
-    description: 'Newton Running makes performance footwear engineered for natural motion and efficiency. Harvey has run thousands of miles in Newtons — from Death Valley to Tennessee backwoods.',
+    description: 'Newton Running makes performance footwear engineered for natural motion and efficiency. Harvey has run thousands of miles in Newtons — from Death Valley to the Tennessee backwoods.',
     category: 'Footwear',
+    photo: '/images/harvey-newton.png',
   },
   {
     name: 'Road ID',
+    slug: 'roadid',
     url: 'https://www.roadid.com',
     description: 'Road ID makes wearable ID products for athletes. When you\'re running for four days in the Tennessee hills, making sure people know who you are matters.',
     category: 'Safety & ID',
+    photo: '/images/harvey-roadid.png',
+  },
+  {
+    name: 'rappid.',
+    slug: 'rappid',
+    url: 'https://www.rappid.run',
+    description: 'Rappid makes performance running apparel built for athletes who push limits. Harvey is a Rappid athlete — wearing their gear through the longest efforts in the sport.',
+    category: 'Apparel',
+    photo: '/images/harvey-rappid.jpg',
   },
 ];
 ---
@@ -45,16 +57,25 @@ const sponsors = [
 
         <div class="sponsors-grid">
           {sponsors.map(sponsor => (
-            <a href={sponsor.url} target="_blank" rel="noopener" class="sponsor-card">
-              <div class="sponsor-card__header">
-                <div class="sponsor-card__logo-area">
-                  <span class="sponsor-card__name display">{sponsor.name}</span>
-                </div>
-                <span class="sponsor-card__category eyebrow">{sponsor.category}</span>
+            <div class={`sponsor-card sponsor-card--${sponsor.slug}`}>
+              <div class="sponsor-card__photo-wrap">
+                {sponsor.photo ? (
+                  <img src={sponsor.photo} alt={`Harvey Lewis with ${sponsor.name}`} class="sponsor-card__photo" loading="lazy" />
+                ) : (
+                  <div class="sponsor-card__photo-placeholder">
+                    <span class={`sponsor-card__wordmark sponsor-card__wordmark--${sponsor.slug}`}>{sponsor.name}</span>
+                  </div>
+                )}
               </div>
-              <p class="sponsor-card__desc">{sponsor.description}</p>
-              <span class="sponsor-card__link accent">Visit {sponsor.name} →</span>
-            </a>
+              <div class="sponsor-card__body">
+                <div class="sponsor-card__header">
+                  <span class={`sponsor-card__name sponsor-card__name--${sponsor.slug}`}>{sponsor.name}</span>
+                  <span class="sponsor-card__category eyebrow">{sponsor.category}</span>
+                </div>
+                <p class="sponsor-card__desc">{sponsor.description}</p>
+                <a href={sponsor.url} target="_blank" rel="noopener" class="sponsor-card__link accent">Visit {sponsor.name} →</a>
+              </div>
+            </div>
           ))}
         </div>
       </div>
@@ -107,22 +128,75 @@ const sponsors = [
 
   .sponsors-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 1.5rem;
   }
 
   .sponsor-card {
     display: flex;
     flex-direction: column;
-    padding: 2.5rem;
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     transition: border-color 0.2s ease;
-    gap: 1rem;
+    overflow: hidden;
   }
 
   .sponsor-card:hover {
     border-color: var(--color-accent);
+  }
+
+  .sponsor-card__photo-wrap {
+    width: 100%;
+    aspect-ratio: 4/3;
+    overflow: hidden;
+    background: var(--color-bg-3);
+  }
+
+  .sponsor-card__photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    transition: transform 0.4s ease;
+  }
+
+  .sponsor-card:hover .sponsor-card__photo {
+    transform: scale(1.03);
+  }
+
+  .sponsor-card--newton .sponsor-card__photo {
+    object-position: center bottom;
+  }
+
+  .sponsor-card--roadid .sponsor-card__photo {
+    object-position: 70% center;
+  }
+
+  .sponsor-card__photo-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-bg-3);
+  }
+
+  /* Rappid wordmark */
+  .sponsor-card__wordmark--rappid {
+    font-family: var(--font-body);
+    font-size: 3rem;
+    font-weight: 800;
+    font-style: italic;
+    letter-spacing: -0.02em;
+    color: var(--color-text-muted);
+  }
+
+  .sponsor-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+    padding: 1.75rem;
+    flex: 1;
   }
 
   .sponsor-card__header {
@@ -133,9 +207,21 @@ const sponsors = [
   }
 
   .sponsor-card__name {
-    font-size: clamp(1.75rem, 3vw, 2.25rem);
+    font-family: var(--font-display);
+    font-size: 1.625rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
     color: var(--color-text);
     line-height: 1;
+  }
+
+  /* Rappid uses their own lowercase italic style */
+  .sponsor-card__name--rappid {
+    font-family: var(--font-body);
+    font-weight: 800;
+    font-style: italic;
+    text-transform: none;
+    letter-spacing: -0.02em;
   }
 
   .sponsor-card__desc {
@@ -149,6 +235,11 @@ const sponsors = [
     font-size: 0.875rem;
     font-weight: 600;
     letter-spacing: 0.05em;
+    text-decoration: none;
+  }
+
+  .sponsor-card__link:hover {
+    text-decoration: underline;
   }
 
   /* Partnership */
@@ -198,6 +289,7 @@ const sponsors = [
   @media (max-width: 900px) {
     .sponsors-grid {
       grid-template-columns: 1fr;
+      max-width: 480px;
     }
 
     .partnership-inner {
