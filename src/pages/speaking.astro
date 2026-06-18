@@ -1,0 +1,343 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+
+const topics = [
+  {
+    title: 'Endurance & Mental Resilience',
+    body: 'What it takes to keep moving when everything says stop. Harvey draws from hundreds of hours of racing to talk about navigating adversity, managing internal dialogue, and finding reserves you didn\'t know you had.',
+  },
+  {
+    title: 'Plant-Based Performance',
+    body: 'Harvey has run 450 miles on vegetables and noodles. He speaks practically about plant-based fueling for performance — what works, what doesn\'t, and why the conventional wisdom on athletic nutrition may be wrong.',
+  },
+  {
+    title: 'Running with Purpose',
+    body: 'From retracing Gandhi\'s Salt March to raising money for clean water, Harvey\'s running has always been tied to something beyond a finish line. A talk about using your gifts in service of something larger.',
+  },
+  {
+    title: 'Mindset & The Long Game',
+    body: 'Harvey taught school for years before he became a world record holder. His story is one of patient accumulation — showing up, improving, and eventually doing something unfathomable. For teams, organizations, and anyone building something over time.',
+  },
+];
+
+const audiences = ['Corporate events', 'Running clubs & communities', 'Schools & universities', 'Health & wellness conferences', 'Endurance sports events', 'Motivational keynotes'];
+---
+
+<Layout
+  title="Speaking"
+  description="Book Harvey Lewis for speaking engagements, keynotes, and appearances. World record holder, Badwater champion, teacher, vegan athlete."
+>
+  <Nav />
+
+  <main>
+    <div class="page-hero">
+      <div class="container">
+        <p class="eyebrow page-hero__eyebrow">Speaking & Appearances</p>
+        <h1 class="page-hero__title">Book Harvey</h1>
+        <p class="page-hero__subtitle">
+          Harvey speaks on endurance, mental resilience, plant-based performance,
+          and finding purpose in difficulty.
+        </p>
+      </div>
+    </div>
+
+    <!-- Topics -->
+    <section class="section topics-section">
+      <div class="container">
+        <p class="eyebrow">What He Talks About</p>
+        <div class="divider"></div>
+        <h2 class="section-title display">Topics</h2>
+        <div class="grid-2 topics-grid">
+          {topics.map(topic => (
+            <div class="topic-card card">
+              <h3 class="topic-card__title">{topic.title}</h3>
+              <p class="topic-card__body">{topic.body}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Audiences -->
+    <section class="section--sm audiences-section">
+      <div class="container">
+        <div class="audiences-inner">
+          <div>
+            <p class="eyebrow">Works For</p>
+            <div class="divider"></div>
+            <h2 class="audiences-title display">Audiences</h2>
+          </div>
+          <ul class="audiences-list">
+            {audiences.map(a => (
+              <li class="audiences-list__item">
+                <span class="accent">—</span>
+                {a}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Form -->
+    <section class="section form-section" id="contact">
+      <div class="container">
+        <div class="form-wrapper">
+          <div class="form-intro">
+            <p class="eyebrow">Get in Touch</p>
+            <div class="divider"></div>
+            <h2 class="form-title display">Booking Inquiry</h2>
+            <p class="form-desc">
+              Fill out the form and Harvey's team will get back to you within a few business days.
+              Include as much detail as you can about your event and audience.
+            </p>
+          </div>
+
+          <form class="contact-form" name="booking" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+            <input type="hidden" name="form-name" value="booking" />
+            <p class="hidden"><label>Don't fill this out: <input name="bot-field" /></label></p>
+
+            <div class="form-row">
+              <div class="form-field">
+                <label class="form-label" for="name">Your Name *</label>
+                <input class="form-input" type="text" id="name" name="name" required placeholder="Jane Smith" />
+              </div>
+              <div class="form-field">
+                <label class="form-label" for="email">Email Address *</label>
+                <input class="form-input" type="email" id="email" name="email" required placeholder="jane@company.com" />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-field">
+                <label class="form-label" for="org">Organization / Company</label>
+                <input class="form-input" type="text" id="org" name="organization" placeholder="Acme Corp" />
+              </div>
+              <div class="form-field">
+                <label class="form-label" for="event-date">Event Date (if known)</label>
+                <input class="form-input" type="text" id="event-date" name="event_date" placeholder="March 2025" />
+              </div>
+            </div>
+
+            <div class="form-field">
+              <label class="form-label" for="event-type">Type of Event *</label>
+              <select class="form-input form-select" id="event-type" name="event_type" required>
+                <option value="" disabled selected>Select event type</option>
+                <option>Corporate keynote</option>
+                <option>Running club / community event</option>
+                <option>School or university</option>
+                <option>Health & wellness conference</option>
+                <option>Endurance sports event</option>
+                <option>Media / podcast / interview</option>
+                <option>Other</option>
+              </select>
+            </div>
+
+            <div class="form-field">
+              <label class="form-label" for="audience">Tell Us About Your Audience</label>
+              <input class="form-input" type="text" id="audience" name="audience" placeholder="e.g., 200 corporate employees, endurance runners, high school students" />
+            </div>
+
+            <div class="form-field">
+              <label class="form-label" for="message">Message *</label>
+              <textarea
+                class="form-input form-textarea"
+                id="message"
+                name="message"
+                required
+                rows="5"
+                placeholder="Tell Harvey about your event, what you're looking for, any specific topics you'd like him to cover, and any other relevant details."
+              ></textarea>
+            </div>
+
+            <button type="submit" class="btn btn--primary form-submit">
+              Send Inquiry →
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  .section-title {
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    margin-bottom: 2.5rem;
+  }
+
+  /* Topics */
+  .topic-card__title {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 0.875rem;
+    color: var(--color-accent);
+  }
+
+  .topic-card__body {
+    color: var(--color-text-muted);
+    line-height: 1.75;
+    font-size: 0.9375rem;
+  }
+
+  /* Audiences */
+  .audiences-section {
+    background: var(--color-bg-2);
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .audiences-inner {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 4rem;
+    align-items: start;
+    padding: 2rem 0;
+  }
+
+  .audiences-title {
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+  }
+
+  .audiences-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    align-content: start;
+  }
+
+  .audiences-list__item {
+    display: flex;
+    gap: 0.75rem;
+    font-size: 0.9375rem;
+    color: var(--color-text-muted);
+    align-items: flex-start;
+  }
+
+  /* Form */
+  .form-section {
+    background: var(--color-bg-2);
+  }
+
+  .form-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 5rem;
+    align-items: start;
+  }
+
+  .form-title {
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    margin-bottom: 1rem;
+  }
+
+  .form-desc {
+    color: var(--color-text-muted);
+    line-height: 1.75;
+    font-size: 0.9375rem;
+  }
+
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+  }
+
+  .form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .form-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .form-input {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    padding: 0.875rem 1rem;
+    font-family: var(--font-body);
+    font-size: 0.9375rem;
+    outline: none;
+    transition: border-color 0.2s ease;
+    width: 100%;
+    appearance: none;
+  }
+
+  .form-input:focus {
+    border-color: var(--color-accent);
+  }
+
+  .form-input::placeholder {
+    color: var(--color-text-faint);
+  }
+
+  .form-textarea {
+    resize: vertical;
+    min-height: 120px;
+  }
+
+  .form-select {
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238a8580' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    padding-right: 2.5rem;
+  }
+
+  .form-submit {
+    align-self: flex-start;
+    margin-top: 0.5rem;
+    padding: 1rem 2.5rem;
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  @media (max-width: 900px) {
+    .form-wrapper {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+
+    .audiences-inner {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .audiences-list {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .form-row {
+      grid-template-columns: 1fr;
+    }
+
+    .form-submit {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>

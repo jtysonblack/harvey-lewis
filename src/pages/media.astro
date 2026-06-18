@@ -1,0 +1,348 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+
+const articles = [
+  {
+    outlet: 'CNN',
+    title: 'Harvey Lewis set a backyard ultramarathon record by running 450 miles for four and a half days – while barely sleeping',
+    url: 'https://www.cnn.com/2023/12/07/sport/harvey-lewis-bigs-backyard-ultramarathon-spt-intl',
+    year: '2023',
+  },
+  {
+    outlet: 'The Guardian',
+    title: 'Ultrarunner Harvey Lewis reaches the end of Lazarus Lake\'s endless backyard',
+    url: 'https://www.theguardian.com/sport/2023/oct/27/harvey-lewis-ultramarathon-backyard-championship',
+    year: '2023',
+  },
+  {
+    outlet: "Runner's World",
+    title: 'How to run 450 miles, according to the backyard ultra world record holder',
+    url: 'https://www.runnersworld.com/uk/training/ultra/a45850510/bigs-backyard-ultra/',
+    year: '2023',
+  },
+  {
+    outlet: 'Outside Online',
+    title: 'Want to Win a Race with No End? Work on Your Poker Face.',
+    url: 'https://www.outsideonline.com/running/racing/races/harvey-lewis-bigs-backyard-ultra/',
+    year: '2023',
+  },
+  {
+    outlet: 'iRunFar',
+    title: 'A Different Mode: An Interview with Harvey Lewis After His Record-Breaking Win',
+    url: 'https://www.irunfar.com/harvey-lewis-2023-big-dogs-backyard-ultra-interview',
+    year: '2023',
+  },
+  {
+    outlet: 'Trail Runner Magazine',
+    title: 'World Records Drop at Big\'s Backyard',
+    url: 'https://www.trailrunnermag.com/people/news/2023-bigs-backyard-ultra/',
+    year: '2023',
+  },
+  {
+    outlet: 'Freetrail',
+    title: 'Harvey Lewis Just Won\'t Quit',
+    url: 'https://freetrail.com/harvey-lewis-just-wont-quit/',
+    year: '2023',
+  },
+  {
+    outlet: 'Sports Illustrated',
+    title: 'Ultra-Marathon Champion and \'Last Man Standing\' Takes On Iconic, Grueling Race',
+    url: 'https://www.si.com/onsi/adventure/running-feed-page/posts/ultra-marathon-champion-last-man-standing-takes-on-iconic-grueling-race',
+    year: '2023',
+  },
+  {
+    outlet: 'WVXU / Cincinnati Public Radio',
+    title: 'Cincinnati ultramarathon runner Harvey Lewis talks about the psychology behind crushing another world record',
+    url: 'https://www.wvxu.org/show/cincinnati-edition/2023-11-29/cincinnati-ultramarathon-runner-harvey-lewis-world-record',
+    year: '2023',
+  },
+  {
+    outlet: 'Veg Club Magazine',
+    title: 'Running on plants: Harvey Lewis on ultra endurance, veganism and inspiring change',
+    url: 'https://vegclubmagazine.com/article/running-on-plants-harvey-lewis-on-ultra-endurance-veganism-and-inspiring-change',
+    year: '2023',
+  },
+  {
+    outlet: 'WLWT Cincinnati',
+    title: '\'I have to pinch myself\': Cincinnati ultra-marathoner recounts win in last-man-standing race',
+    url: 'https://www.wlwt.com/article/cincinnati-ultra-marathoner-win-race-harvey-lewis/45657981',
+    year: '2023',
+  },
+  {
+    outlet: 'GearJunkie',
+    title: 'Harvey Lewis Breaks \'Backyard Ultra\' World Record, Runs 354 Miles in 3.5 Days',
+    url: 'https://gearjunkie.com/news/big-dogs-backyard-ultra-2021-results',
+    year: '2021',
+  },
+];
+
+const podcasts = [
+  {
+    title: 'How This 47-Year-Old Teacher Ran For 4 DAYS Straight',
+    show: 'Rich Roll Podcast',
+    url: 'https://www.richroll.com/podcast/harvey-lewis-658/',
+  },
+  {
+    title: 'Inside the Mind Of 450 Mile Backyard Ultra Record Holder Harvey Lewis',
+    show: 'Backyard Ultra Podcast',
+    url: 'https://youtu.be/E7yw1LkEhzU',
+  },
+  {
+    title: 'Breaking the Record at Big\'s Backyard Ultra with Harvey Lewis',
+    show: 'REI Uncommon Path',
+    url: 'https://youtu.be/YjlgImSlKH0',
+  },
+  {
+    title: 'The Salt Pans Ultra Race in Botswana with Harvey Lewis',
+    show: 'Tribe of Runners Podcast',
+    url: 'https://podcasters.spotify.com/pod/show/lizmyers1213/episodes/024-The-Salt-Pans-Ultra-Race-in-Botswana-with-Harvey-Lewis--Dale---Stefan-e2npcv1',
+  },
+  {
+    title: 'Harvey Lewis — Ultrarunner',
+    show: 'The Necessary Entrepreneur',
+    url: 'https://www.thenecessaryentrepreneur.com/30-harvey-lewis-ultrarunner/',
+  },
+];
+---
+
+<Layout
+  title="Media"
+  description="Press coverage, podcast appearances, and media featuring Harvey Lewis — two-time Big's Backyard Ultra champion and 2023 world record holder."
+>
+  <Nav />
+
+  <main>
+    <div class="page-hero">
+      <div class="container">
+        <p class="eyebrow page-hero__eyebrow">Press & Media</p>
+        <h1 class="page-hero__title">Coverage</h1>
+        <p class="page-hero__subtitle">
+          Harvey's story has been covered by CNN, The Guardian, Runner's World, Outside,
+          and outlets around the world.
+        </p>
+      </div>
+    </div>
+
+    <!-- Documentary feature -->
+    <section class="section--sm doc-banner">
+      <div class="container">
+        <div class="doc-banner__inner">
+          <div>
+            <p class="eyebrow">Documentary Film</p>
+            <h2 class="doc-banner__title display">Like Harvey Like Son</h2>
+            <p class="doc-banner__body">Now streaming on Amazon Prime Video.</p>
+          </div>
+          <a
+            href="https://www.amazon.com/gp/video/detail/0ITL5EILMNACM03Q86F1KVDWNI/"
+            target="_blank"
+            rel="noopener"
+            class="btn btn--primary"
+          >
+            Watch on Prime →
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Articles -->
+    <section class="section articles-section">
+      <div class="container">
+        <p class="eyebrow">Articles</p>
+        <div class="divider"></div>
+        <h2 class="section-title display">Press</h2>
+
+        <div class="articles-grid">
+          {articles.map(article => (
+            <a href={article.url} target="_blank" rel="noopener" class="article-card">
+              <div class="article-card__header">
+                <span class="article-card__outlet eyebrow">{article.outlet}</span>
+                <span class="article-card__year">{article.year}</span>
+              </div>
+              <p class="article-card__title">{article.title}</p>
+              <span class="article-card__cta">Read →</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Podcasts -->
+    <section class="section podcasts-section">
+      <div class="container">
+        <p class="eyebrow">Audio</p>
+        <div class="divider"></div>
+        <h2 class="section-title display">Podcasts</h2>
+
+        <div class="podcasts-list">
+          {podcasts.map(pod => (
+            <a href={pod.url} target="_blank" rel="noopener" class="podcast-item">
+              <div class="podcast-item__icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4M8 23h8"/></svg>
+              </div>
+              <div class="podcast-item__text">
+                <p class="podcast-item__title">{pod.title}</p>
+                <p class="podcast-item__show">{pod.show}</p>
+              </div>
+              <span class="podcast-item__arrow accent">→</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  /* Doc banner */
+  .doc-banner {
+    background: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .doc-banner__inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+    padding: 2rem 0;
+  }
+
+  .doc-banner__title {
+    font-size: clamp(2rem, 5vw, 3rem);
+    margin: 0.5rem 0;
+  }
+
+  .doc-banner__body {
+    color: var(--color-text-muted);
+    font-size: 0.9375rem;
+  }
+
+  /* Articles */
+  .section-title {
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    margin-bottom: 2.5rem;
+  }
+
+  .articles-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    border: 1px solid var(--color-border);
+  }
+
+  .article-card {
+    display: flex;
+    flex-direction: column;
+    padding: 1.75rem;
+    background: var(--color-bg-2);
+    border-right: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+    transition: background 0.2s ease;
+    gap: 0.75rem;
+  }
+
+  .article-card:hover {
+    background: var(--color-surface);
+  }
+
+  .article-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .article-card__year {
+    font-size: 0.6875rem;
+    color: var(--color-text-faint);
+    letter-spacing: 0.1em;
+  }
+
+  .article-card__title {
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    flex: 1;
+    color: var(--color-text);
+  }
+
+  .article-card__cta {
+    font-size: 0.8125rem;
+    color: var(--color-accent);
+    font-weight: 600;
+  }
+
+  /* Podcasts */
+  .podcasts-section {
+    background: var(--color-bg-2);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .podcasts-list {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--color-border);
+  }
+
+  .podcast-item {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--color-border);
+    transition: background 0.2s ease;
+  }
+
+  .podcast-item:last-child {
+    border-bottom: none;
+  }
+
+  .podcast-item:hover {
+    background: var(--color-surface);
+  }
+
+  .podcast-item__icon {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-accent);
+  }
+
+  .podcast-item__text {
+    flex: 1;
+  }
+
+  .podcast-item__title {
+    font-size: 0.9375rem;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+  }
+
+  .podcast-item__show {
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+  }
+
+  .podcast-item__arrow {
+    font-size: 1.125rem;
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 768px) {
+    .articles-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .doc-banner__inner {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>

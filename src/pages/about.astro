@@ -1,0 +1,310 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+
+const timeline = [
+  { year: '2008', event: 'Retraced Gandhi\'s Salt March — 241 miles across India' },
+  { year: '2009', event: 'Retraced MLK\'s Selma to Montgomery march' },
+  { year: '2012–17', event: 'Represented Team USA at IAU 24-Hour World Championship (4 times)' },
+  { year: '2014', event: 'Won Badwater 135 in 23:52:55 — 135 miles through Death Valley' },
+  { year: '2014', event: 'Won SC24 — 154.59 miles in 24 hours' },
+  { year: '2020', event: 'Top finisher at Big\'s Backyard Ultra alongside Courtney Dauwalter' },
+  { year: '2021', event: 'Won Big\'s Backyard Ultra — 354.16 miles, world record at the time' },
+  { year: '2023', event: 'Won Big\'s Backyard Ultra — 450 miles in 108 hours. New world record.' },
+];
+---
+
+<Layout
+  title="About"
+  description="Harvey Lewis is a Cincinnati high school teacher, two-time Big's Backyard Ultra champion, 2023 world record holder, and vegan ultrarunner with a story that goes far beyond sport."
+>
+  <Nav />
+
+  <main>
+    <div class="page-hero">
+      <div class="container">
+        <p class="eyebrow page-hero__eyebrow">The Story</p>
+        <h1 class="page-hero__title">About Harvey</h1>
+        <p class="page-hero__subtitle">
+          A high school teacher from Cincinnati who runs through the night, the next day,
+          and the day after that — until everyone else stops.
+        </p>
+      </div>
+    </div>
+
+    <!-- Bio -->
+    <section class="section bio">
+      <div class="container bio__inner">
+        <div class="bio__photo-col">
+          <div class="bio__photo-placeholder">
+            <span class="bio__photo-caption">Photo coming — event shoot in progress</span>
+          </div>
+          <div class="bio__quick-facts">
+            <p class="eyebrow" style="margin-bottom: 1rem;">Quick Facts</p>
+            <ul class="facts-list">
+              <li><span class="facts-list__label">Age</span><span>49</span></li>
+              <li><span class="facts-list__label">From</span><span>Cincinnati, OH</span></li>
+              <li><span class="facts-list__label">Day Job</span><span>High School Teacher, SCPA</span></li>
+              <li><span class="facts-list__label">Diet</span><span>Vegan</span></li>
+              <li><span class="facts-list__label">Record</span><span>450 mi / 108 hrs (2023)</span></li>
+              <li><span class="facts-list__label">Sponsors</span><span>Newton Running, Road ID</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="bio__text">
+          <h2 class="bio__heading serif">The teacher who wouldn't quit</h2>
+          <div class="divider"></div>
+
+          <p>Harvey Lewis was born in Wheeling, West Virginia and grew up in Berea, Ohio. He settled in Cincinnati, where he has spent his career teaching at the School for Creative and Performing Arts. He coaches and teaches. He grades papers. And on weekends, he runs longer than most people have ever been awake.</p>
+
+          <p>Harvey is vegan — a choice he credits openly for his recovery speed and ability to run for days at a time. While other athletes debate nutrition windows, Harvey eats pad Thai and muffins between 4-mile loops on hour four of day four.</p>
+
+          <p>He first came to national attention at Big's Backyard Ultra in 2021, where he set a world record with 354 miles. But it was 2023 that made him a global story: 108 consecutive hours of running, 450 miles, four and a half days. CNN, The Guardian, Runner's World, Outside. The teacher from Cincinnati who ran longer than anyone ever had.</p>
+
+          <h3 class="bio__subheading">Beyond the finish line</h3>
+
+          <p>Harvey's relationship with running has always been tied to something larger than the sport. In 2008, he earned a grant to retrace Mahatma Gandhi's famous 1930 Salt March — 241 miles across India — as a study of nonviolent protest and human endurance. The following year, he retraced Martin Luther King Jr.'s Selma to Montgomery march, meeting 99-year-old civil rights icon Amelia Boynton Robinson along the way.</p>
+
+          <p>He raises money for clean water access through RunUp4Water. He shows up for community organizations. He teaches. The running is inseparable from who he is as a person.</p>
+
+          <h3 class="bio__subheading">A different mode of being</h3>
+
+          <p>Ask Harvey what the end of a 100-hour run feels like, and he won't give you a physiology lecture. He talks about entering a "different mode of being" — a state of consciousness that requires days of deprivation to reach, where the ordinary limits of the body seem to disconnect from something deeper and more sustaining.</p>
+
+          <p>"There are powers that exist to push us beyond what seems reasonable," he said after his 2023 record. He believes that. He's run the evidence.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Timeline -->
+    <section class="section timeline-section">
+      <div class="container">
+        <p class="eyebrow">Career Timeline</p>
+        <div class="divider"></div>
+        <h2 class="section-heading display">The Record</h2>
+        <div class="timeline">
+          {timeline.map((item, i) => (
+            <div class="timeline__item">
+              <div class="timeline__year accent">{item.year}</div>
+              <div class="timeline__line"></div>
+              <div class="timeline__event">{item.event}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Documentary -->
+    <section class="section doc-section">
+      <div class="container">
+        <div class="doc-card">
+          <div class="doc-card__text">
+            <p class="eyebrow">Documentary</p>
+            <div class="divider"></div>
+            <h2 class="doc-card__title serif">Like Harvey Like Son</h2>
+            <p class="doc-card__body">
+              An Amazon Prime documentary following Harvey and his son. A portrait of endurance,
+              family, and what gets passed down from a parent who runs for days at a time.
+            </p>
+            <a
+              href="https://www.amazon.com/gp/video/detail/0ITL5EILMNACM03Q86F1KVDWNI/"
+              target="_blank"
+              rel="noopener"
+              class="btn btn--primary"
+            >
+              Watch on Amazon Prime →
+            </a>
+          </div>
+          <div class="doc-card__badge display">
+            Amazon<br />Prime
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  .bio__inner {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+
+  .bio__photo-placeholder {
+    aspect-ratio: 3/4;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    display: flex;
+    align-items: flex-end;
+    padding: 1rem;
+  }
+
+  .bio__photo-caption {
+    font-size: 0.6875rem;
+    color: var(--color-text-faint);
+    font-style: italic;
+  }
+
+  .bio__quick-facts {
+    margin-top: 1.5rem;
+    padding: 1.5rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+  }
+
+  .facts-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .facts-list li {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.875rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .facts-list li:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .facts-list__label {
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    font-size: 0.6875rem;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+    padding-top: 0.125rem;
+  }
+
+  .bio__heading {
+    font-size: clamp(1.75rem, 3vw, 2.25rem);
+    margin-bottom: 1rem;
+    line-height: 1.3;
+  }
+
+  .bio__text p {
+    color: var(--color-text-muted);
+    margin-bottom: 1.25rem;
+    line-height: 1.85;
+  }
+
+  .bio__subheading {
+    font-family: var(--font-display);
+    font-size: 1.375rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin: 2rem 0 1rem;
+    color: var(--color-text);
+  }
+
+  /* Timeline */
+  .timeline-section {
+    background: var(--color-bg-2);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .section-heading {
+    font-size: clamp(3rem, 7vw, 5rem);
+    margin-bottom: 3rem;
+  }
+
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .timeline__item {
+    display: grid;
+    grid-template-columns: 80px 2px 1fr;
+    gap: 0 1.5rem;
+    align-items: start;
+    padding: 1.25rem 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .timeline__item:last-child {
+    border-bottom: none;
+  }
+
+  .timeline__year {
+    font-family: var(--font-display);
+    font-size: 1.125rem;
+    letter-spacing: 0.06em;
+    padding-top: 0.1rem;
+  }
+
+  .timeline__line {
+    width: 2px;
+    background: var(--color-border);
+    align-self: stretch;
+    margin: 0 auto;
+  }
+
+  .timeline__event {
+    font-size: 0.9375rem;
+    color: var(--color-text-muted);
+    line-height: 1.6;
+    padding: 0.1rem 0;
+  }
+
+  /* Documentary */
+  .doc-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 3rem;
+    padding: 3rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+  }
+
+  .doc-card__title {
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    margin-bottom: 1rem;
+    line-height: 1.2;
+  }
+
+  .doc-card__body {
+    color: var(--color-text-muted);
+    max-width: 480px;
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+  }
+
+  .doc-card__badge {
+    font-size: 2.5rem;
+    color: var(--color-text-faint);
+    text-align: center;
+    flex-shrink: 0;
+    line-height: 1.1;
+    padding: 1.5rem;
+    border: 1px solid var(--color-border);
+  }
+
+  @media (max-width: 900px) {
+    .bio__inner {
+      grid-template-columns: 1fr;
+    }
+
+    .bio__photo-placeholder {
+      max-width: 320px;
+    }
+
+    .doc-card {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>

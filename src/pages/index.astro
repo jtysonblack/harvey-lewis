@@ -1,0 +1,500 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+
+const stats = [
+  { value: '450', unit: 'Miles', label: '2023 World Record' },
+  { value: '108', unit: 'Hours', label: 'Non-Stop Running' },
+  { value: '2×', unit: 'Champion', label: "Big's Backyard Ultra" },
+  { value: '135', unit: 'Miles', label: 'Badwater Champion' },
+];
+
+const pressLogos = [
+  { name: 'CNN', url: 'https://www.cnn.com/2023/12/07/sport/harvey-lewis-bigs-backyard-ultramarathon-spt-intl' },
+  { name: 'The Guardian', url: 'https://www.theguardian.com/sport/2023/oct/27/harvey-lewis-ultramarathon-backyard-championship' },
+  { name: "Runner's World", url: 'https://www.runnersworld.com/uk/training/ultra/a45850510/bigs-backyard-ultra/' },
+  { name: 'Outside', url: 'https://www.outsideonline.com/running/racing/races/harvey-lewis-bigs-backyard-ultra/' },
+  { name: 'iRunFar', url: 'https://www.irunfar.com/harvey-lewis-2023-big-dogs-backyard-ultra-interview' },
+  { name: 'Trail Runner', url: 'https://www.trailrunnermag.com/people/news/2023-bigs-backyard-ultra/' },
+];
+
+const featuredVideos = [
+  {
+    title: 'How This 47-Year-Old Teacher Ran For 4 DAYS Straight',
+    channel: 'Rich Roll Podcast',
+    id: 'S3LT2XfyBdo',
+  },
+  {
+    title: 'Breaking the Record at Big\'s Backyard Ultra',
+    channel: 'REI Co-op',
+    id: 'YjlgImSlKH0',
+  },
+];
+---
+
+<Layout title="Home" description="Harvey Lewis — two-time Big's Backyard Ultra champion and 2023 world record holder. 450 miles. 108 hours. Last man standing.">
+  <Nav />
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero__bg">
+      <div class="hero__overlay"></div>
+      <!-- Replace src with actual photo when available -->
+      <div class="hero__img-placeholder"></div>
+    </div>
+    <div class="hero__content container">
+      <p class="eyebrow hero__eyebrow">Two-Time Big's Backyard Ultra Champion</p>
+      <h1 class="hero__headline display">
+        Last Man<br />
+        <span class="accent">Standing</span>
+      </h1>
+      <p class="hero__sub">
+        450 miles. 108 hours. Four and a half days straight.<br />
+        Cincinnati high school teacher. Vegan ultrarunner. World record holder.
+      </p>
+      <div class="hero__actions">
+        <a href="/about" class="btn btn--primary">Harvey's Story</a>
+        <a href="/speaking" class="btn btn--outline">Book Harvey</a>
+      </div>
+    </div>
+    <div class="hero__scroll-hint">
+      <span>Scroll</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+    </div>
+  </section>
+
+  <!-- Stats Bar -->
+  <section class="stats-bar">
+    <div class="container">
+      <div class="stats-bar__grid">
+        {stats.map(stat => (
+          <div class="stats-bar__item">
+            <div class="stats-bar__value display">
+              {stat.value}<span class="stats-bar__unit">{stat.unit}</span>
+            </div>
+            <div class="stats-bar__label">{stat.label}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Intro -->
+  <section class="section intro">
+    <div class="container intro__inner">
+      <div class="intro__text">
+        <p class="eyebrow">Who Is Harvey Lewis</p>
+        <div class="divider"></div>
+        <h2 class="intro__headline serif">
+          A different mode of being
+        </h2>
+        <p>
+          By day, Harvey Lewis teaches at Cincinnati's School for Creative and Performing Arts.
+          By night — and by the second day, third day, and fourth — he runs.
+        </p>
+        <p>
+          He won the 2021 and 2023 Big's Backyard Ultra, setting the world record in 2023 by
+          completing 108 loops of 4.167 miles each — 450 miles in 108 hours without stop.
+          He runs on plants, operates on almost no sleep, and describes the final stretch
+          of a multi-day effort as entering a frequency where he "could just go forever."
+        </p>
+        <p>
+          Harvey's running has never just been about distance. He has retraced Gandhi's
+          Salt March in India and MLK's Selma to Montgomery march — using his feet
+          as a vehicle for purpose.
+        </p>
+        <a href="/about" class="btn btn--outline" style="margin-top: 1.5rem;">Full Story →</a>
+      </div>
+      <div class="intro__quote">
+        <blockquote class="pull-quote">
+          <p class="pull-quote__text serif">
+            "There are powers that exist to push us beyond what seems reasonable."
+          </p>
+          <footer class="pull-quote__source">
+            — Harvey Lewis, after running 450 miles
+          </footer>
+        </blockquote>
+      </div>
+    </div>
+  </section>
+
+  <!-- Press -->
+  <section class="section--sm press">
+    <div class="container">
+      <p class="eyebrow press__label">As Featured In</p>
+      <div class="press__logos">
+        {pressLogos.map(outlet => (
+          <a href={outlet.url} target="_blank" rel="noopener" class="press__logo-item">
+            {outlet.name}
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Videos -->
+  <section class="section videos-preview">
+    <div class="container">
+      <p class="eyebrow">Watch</p>
+      <div class="divider"></div>
+      <h2 class="section-title display">Harvey In Action</h2>
+      <div class="grid-2 videos-preview__grid">
+        {featuredVideos.map(video => (
+          <div class="video-embed">
+            <div class="video-embed__wrapper">
+              <iframe
+                src={`https://www.youtube.com/embed/${video.id}`}
+                title={video.title}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+                loading="lazy"
+              ></iframe>
+            </div>
+            <p class="video-embed__title">{video.title}</p>
+            <p class="video-embed__channel">{video.channel}</p>
+          </div>
+        ))}
+      </div>
+      <div style="text-align: center; margin-top: 2.5rem;">
+        <a href="/youtube" class="btn btn--outline">All Videos →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Speaking CTA -->
+  <section class="section cta-band">
+    <div class="container">
+      <div class="cta-band__inner">
+        <div>
+          <p class="eyebrow">Speaking & Appearances</p>
+          <div class="divider"></div>
+          <h2 class="cta-band__headline display">
+            Bring Harvey to<br />Your Event
+          </h2>
+          <p class="cta-band__body">
+            Harvey speaks on endurance, mental resilience, plant-based performance,
+            and finding purpose in difficulty. Corporate events, running communities,
+            schools, and conferences.
+          </p>
+        </div>
+        <div class="cta-band__action">
+          <a href="/speaking" class="btn btn--primary">Book Harvey</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <Footer />
+</Layout>
+
+<style>
+  /* ---- Hero ---- */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .hero__bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  .hero__img-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      135deg,
+      #0c0c0c 0%,
+      #1a1209 40%,
+      #261500 70%,
+      #1a0c00 100%
+    );
+  }
+
+  .hero__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to right,
+      rgba(12, 12, 12, 0.92) 0%,
+      rgba(12, 12, 12, 0.5) 60%,
+      rgba(12, 12, 12, 0.2) 100%
+    );
+    z-index: 1;
+  }
+
+  .hero__content {
+    position: relative;
+    z-index: 2;
+    padding-top: var(--nav-height);
+    padding-bottom: 4rem;
+    max-width: var(--max-width);
+  }
+
+  .hero__eyebrow {
+    margin-bottom: 1.5rem;
+  }
+
+  .hero__headline {
+    font-size: clamp(5rem, 14vw, 11rem);
+    margin-bottom: 1.5rem;
+    color: var(--color-text);
+  }
+
+  .hero__sub {
+    font-size: 1.125rem;
+    color: var(--color-text-muted);
+    line-height: 1.7;
+    max-width: 480px;
+    margin-bottom: 2.5rem;
+  }
+
+  .hero__actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .hero__scroll-hint {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.6875rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--color-text-faint);
+    animation: bounce 2s infinite;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(6px); }
+  }
+
+  /* ---- Stats bar ---- */
+  .stats-bar {
+    background: var(--color-bg-2);
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+    padding: 2.5rem 0;
+  }
+
+  .stats-bar__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+  }
+
+  .stats-bar__item {
+    text-align: center;
+    padding: 0.5rem;
+  }
+
+  .stats-bar__value {
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    color: var(--color-accent);
+    line-height: 1;
+  }
+
+  .stats-bar__unit {
+    font-size: 0.6em;
+    margin-left: 0.1em;
+    color: var(--color-text-muted);
+  }
+
+  .stats-bar__label {
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin-top: 0.5rem;
+  }
+
+  /* ---- Intro ---- */
+  .intro__inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: start;
+  }
+
+  .intro__headline {
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+  }
+
+  .intro__text p {
+    color: var(--color-text-muted);
+    margin-bottom: 1rem;
+    line-height: 1.8;
+  }
+
+  .pull-quote {
+    border-left: 2px solid var(--color-accent);
+    padding: 2rem 2rem 2rem 2.5rem;
+    background: var(--color-surface);
+    position: sticky;
+    top: calc(var(--nav-height) + 2rem);
+  }
+
+  .pull-quote__text {
+    font-size: 1.5rem;
+    line-height: 1.5;
+    font-style: italic;
+    color: var(--color-text);
+    margin-bottom: 1.25rem;
+  }
+
+  .pull-quote__source {
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  /* ---- Press ---- */
+  .press {
+    background: var(--color-bg-2);
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .press__label {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .press__logos {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem 1.5rem;
+  }
+
+  .press__logo-item {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    letter-spacing: 0.08em;
+    color: var(--color-text-faint);
+    padding: 0.75rem 1.5rem;
+    border: 1px solid var(--color-border);
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+  }
+
+  .press__logo-item:hover {
+    color: var(--color-text);
+    border-color: var(--color-accent);
+  }
+
+  /* ---- Videos preview ---- */
+  .section-title {
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    margin-bottom: 2.5rem;
+  }
+
+  .video-embed__wrapper {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+    background: var(--color-surface);
+    margin-bottom: 1rem;
+  }
+
+  .video-embed__wrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
+  .video-embed__title {
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+  }
+
+  .video-embed__channel {
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+  }
+
+  /* ---- CTA Band ---- */
+  .cta-band {
+    background: var(--color-bg-2);
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .cta-band__inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 3rem;
+  }
+
+  .cta-band__headline {
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+  }
+
+  .cta-band__body {
+    color: var(--color-text-muted);
+    max-width: 480px;
+    margin-top: 1rem;
+    line-height: 1.7;
+  }
+
+  .cta-band__action {
+    flex-shrink: 0;
+  }
+
+  /* ---- Responsive ---- */
+  @media (max-width: 900px) {
+    .stats-bar__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .intro__inner {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+
+    .pull-quote {
+      position: static;
+    }
+
+    .cta-band__inner {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .stats-bar__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .hero__actions {
+      flex-direction: column;
+    }
+
+    .hero__actions .btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>

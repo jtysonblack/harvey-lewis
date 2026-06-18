@@ -1,0 +1,212 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+
+const sponsors = [
+  {
+    name: 'Newton Running',
+    url: 'https://www.newtonrunning.com',
+    description: 'Newton Running makes performance footwear engineered for natural motion and efficiency. Harvey has run thousands of miles in Newtons — from Death Valley to Tennessee backwoods.',
+    category: 'Footwear',
+  },
+  {
+    name: 'Road ID',
+    url: 'https://www.roadid.com',
+    description: 'Road ID makes wearable ID products for athletes. When you\'re running for four days in the Tennessee hills, making sure people know who you are matters.',
+    category: 'Safety & ID',
+  },
+];
+---
+
+<Layout
+  title="Sponsors"
+  description="Harvey Lewis's sponsors and partners — the brands that support world-class ultra endurance performance."
+>
+  <Nav />
+
+  <main>
+    <div class="page-hero">
+      <div class="container">
+        <p class="eyebrow page-hero__eyebrow">Partners</p>
+        <h1 class="page-hero__title">Sponsors</h1>
+        <p class="page-hero__subtitle">
+          The brands Harvey trusts when the miles get long and the days blur together.
+        </p>
+      </div>
+    </div>
+
+    <!-- Current sponsors -->
+    <section class="section sponsors-section">
+      <div class="container">
+        <p class="eyebrow">Current Partners</p>
+        <div class="divider"></div>
+        <h2 class="section-title display">Supported By</h2>
+
+        <div class="sponsors-grid">
+          {sponsors.map(sponsor => (
+            <a href={sponsor.url} target="_blank" rel="noopener" class="sponsor-card">
+              <div class="sponsor-card__header">
+                <div class="sponsor-card__logo-area">
+                  <span class="sponsor-card__name display">{sponsor.name}</span>
+                </div>
+                <span class="sponsor-card__category eyebrow">{sponsor.category}</span>
+              </div>
+              <p class="sponsor-card__desc">{sponsor.description}</p>
+              <span class="sponsor-card__link accent">Visit {sponsor.name} →</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Partnership inquiry -->
+    <section class="section partnership-section">
+      <div class="container">
+        <div class="partnership-inner">
+          <div class="partnership-text">
+            <p class="eyebrow">Work Together</p>
+            <div class="divider"></div>
+            <h2 class="partnership-title display">
+              Partner with<br />Harvey
+            </h2>
+            <p class="partnership-desc">
+              Harvey is selective about the brands he represents — he only works with
+              products he actually uses and believes in. If your brand aligns with
+              endurance, plant-based performance, or purpose-driven athletics,
+              reach out through the booking form.
+            </p>
+            <p class="partnership-desc">
+              Harvey has been featured in CNN, The Guardian, Runner's World, Outside,
+              and dozens of publications. His audience spans serious endurance athletes,
+              vegan and plant-based communities, and people drawn to stories of human resilience.
+            </p>
+          </div>
+          <div class="partnership-cta">
+            <div class="partnership-cta-card">
+              <p class="partnership-cta-card__title display">Reach Out</p>
+              <p class="partnership-cta-card__desc">Partnership inquiries via the booking form.</p>
+              <a href="/speaking#contact" class="btn btn--primary" style="margin-top: 1.5rem; width: 100%; justify-content: center;">
+                Contact Harvey →
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  .section-title {
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    margin-bottom: 2.5rem;
+  }
+
+  .sponsors-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  .sponsor-card {
+    display: flex;
+    flex-direction: column;
+    padding: 2.5rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    transition: border-color 0.2s ease;
+    gap: 1rem;
+  }
+
+  .sponsor-card:hover {
+    border-color: var(--color-accent);
+  }
+
+  .sponsor-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .sponsor-card__name {
+    font-size: clamp(1.75rem, 3vw, 2.25rem);
+    color: var(--color-text);
+    line-height: 1;
+  }
+
+  .sponsor-card__desc {
+    color: var(--color-text-muted);
+    line-height: 1.75;
+    font-size: 0.9375rem;
+    flex: 1;
+  }
+
+  .sponsor-card__link {
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+  }
+
+  /* Partnership */
+  .partnership-section {
+    background: var(--color-bg-2);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .partnership-inner {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 5rem;
+    align-items: start;
+  }
+
+  .partnership-title {
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    margin-bottom: 1.5rem;
+  }
+
+  .partnership-desc {
+    color: var(--color-text-muted);
+    line-height: 1.8;
+    font-size: 0.9375rem;
+    margin-bottom: 1rem;
+  }
+
+  .partnership-cta-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    padding: 2rem;
+    position: sticky;
+    top: calc(var(--nav-height) + 2rem);
+  }
+
+  .partnership-cta-card__title {
+    font-size: 1.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .partnership-cta-card__desc {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    line-height: 1.6;
+  }
+
+  @media (max-width: 900px) {
+    .sponsors-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .partnership-inner {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+
+    .partnership-cta-card {
+      position: static;
+    }
+  }
+</style>
