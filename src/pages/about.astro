@@ -37,8 +37,13 @@ const timeline = [
     <section class="section bio">
       <div class="container bio__inner">
         <div class="bio__photo-col">
-          <div class="bio__photo-placeholder">
-            <span class="bio__photo-caption">Photo coming — event shoot in progress</span>
+          <div class="bio__photo-wrap">
+            <img
+              src="https://img.youtube.com/vi/YjlgImSlKH0/maxresdefault.jpg"
+              alt="Harvey Lewis — ultrarunner and world record holder"
+              class="bio__photo"
+              loading="eager"
+            />
           </div>
           <div class="bio__quick-facts">
             <p class="eyebrow" style="margin-bottom: 1rem;">Quick Facts</p>
@@ -74,6 +79,34 @@ const timeline = [
           <p>Ask Harvey what the end of a 100-hour run feels like, and he won't give you a physiology lecture. He talks about entering a "different mode of being" — a state of consciousness that requires days of deprivation to reach, where the ordinary limits of the body seem to disconnect from something deeper and more sustaining.</p>
 
           <p>"There are powers that exist to push us beyond what seems reasonable," he said after his 2023 record. He believes that. He's run the evidence.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Harvey & Kelly -->
+    <section class="section couple-section">
+      <div class="container couple__inner">
+        <div class="couple__photo-wrap">
+          <img
+            src="/images/harvey-kelly.jpg"
+            alt="Harvey Lewis with his wife Kelly"
+            class="couple__photo"
+            loading="lazy"
+            onerror="this.parentElement.style.display='none'"
+          />
+        </div>
+        <div class="couple__text">
+          <p class="eyebrow">Family</p>
+          <div class="divider"></div>
+          <h2 class="couple__heading serif">Harvey & Kelly</h2>
+          <p>
+            Kelly has been Harvey's crew chief, training partner, and anchor through every multi-day race.
+            They run together as @HarveyandKelly on YouTube — sharing their training, their travels,
+            and the life they've built around movement and purpose.
+          </p>
+          <a href="https://youtube.com/@HarveyandKelly" target="_blank" rel="noopener" class="btn btn--outline" style="margin-top: 1.5rem;">
+            Watch Together →
+          </a>
         </div>
       </div>
     </section>
@@ -136,19 +169,54 @@ const timeline = [
     align-items: start;
   }
 
-  .bio__photo-placeholder {
-    aspect-ratio: 3/4;
-    background: var(--color-surface);
+  .bio__photo-wrap {
+    aspect-ratio: 16/9;
+    overflow: hidden;
     border: 1px solid var(--color-border);
-    display: flex;
-    align-items: flex-end;
-    padding: 1rem;
   }
 
-  .bio__photo-caption {
-    font-size: 0.6875rem;
-    color: var(--color-text-faint);
-    font-style: italic;
+  .bio__photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+  }
+
+  /* Couple section */
+  .couple-section {
+    background: var(--color-bg-2);
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .couple__inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+  }
+
+  .couple__photo-wrap {
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    aspect-ratio: 4/5;
+  }
+
+  .couple__photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .couple__heading {
+    font-size: clamp(1.75rem, 3vw, 2.25rem);
+    margin-bottom: 1rem;
+    line-height: 1.3;
+  }
+
+  .couple__text p {
+    color: var(--color-text-muted);
+    line-height: 1.85;
   }
 
   .bio__quick-facts {
@@ -298,8 +366,9 @@ const timeline = [
       grid-template-columns: 1fr;
     }
 
-    .bio__photo-placeholder {
-      max-width: 320px;
+    .couple__inner {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
     }
 
     .doc-card {

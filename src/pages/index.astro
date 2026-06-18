@@ -11,12 +11,12 @@ const stats = [
 ];
 
 const pressLogos = [
-  { name: 'CNN', url: 'https://www.cnn.com/2023/12/07/sport/harvey-lewis-bigs-backyard-ultramarathon-spt-intl' },
-  { name: 'The Guardian', url: 'https://www.theguardian.com/sport/2023/oct/27/harvey-lewis-ultramarathon-backyard-championship' },
-  { name: "Runner's World", url: 'https://www.runnersworld.com/uk/training/ultra/a45850510/bigs-backyard-ultra/' },
-  { name: 'Outside', url: 'https://www.outsideonline.com/running/racing/races/harvey-lewis-bigs-backyard-ultra/' },
-  { name: 'iRunFar', url: 'https://www.irunfar.com/harvey-lewis-2023-big-dogs-backyard-ultra-interview' },
-  { name: 'Trail Runner', url: 'https://www.trailrunnermag.com/people/news/2023-bigs-backyard-ultra/' },
+  { name: 'CNN', slug: 'cnn', url: 'https://www.cnn.com/2023/12/07/sport/harvey-lewis-bigs-backyard-ultramarathon-spt-intl' },
+  { name: 'The Guardian', slug: 'guardian', url: 'https://www.theguardian.com/sport/2023/oct/27/harvey-lewis-ultramarathon-backyard-championship' },
+  { name: "Runner's World", slug: 'runners-world', url: 'https://www.runnersworld.com/uk/training/ultra/a45850510/bigs-backyard-ultra/' },
+  { name: 'Outside', slug: 'outside', url: 'https://www.outsideonline.com/running/racing/races/harvey-lewis-bigs-backyard-ultra/' },
+  { name: 'iRunFar', slug: 'irunfar', url: 'https://www.irunfar.com/harvey-lewis-2023-big-dogs-backyard-ultra-interview' },
+  { name: 'Trail Runner', slug: 'trail-runner', url: 'https://www.trailrunnermag.com/people/news/2023-bigs-backyard-ultra/' },
 ];
 
 const featuredVideos = [
@@ -40,8 +40,12 @@ const featuredVideos = [
   <section class="hero">
     <div class="hero__bg">
       <div class="hero__overlay"></div>
-      <!-- Replace src with actual photo when available -->
-      <div class="hero__img-placeholder"></div>
+      <img
+        src="/images/hero-harvey.jpg"
+        alt="Harvey Lewis running at Big's Backyard Ultra"
+        class="hero__img"
+        loading="eager"
+      />
     </div>
     <div class="hero__content container">
       <p class="eyebrow hero__eyebrow">Two-Time Big's Backyard Ultra Champion</p>
@@ -125,7 +129,7 @@ const featuredVideos = [
       <p class="eyebrow press__label">As Featured In</p>
       <div class="press__logos">
         {pressLogos.map(outlet => (
-          <a href={outlet.url} target="_blank" rel="noopener" class="press__logo-item">
+          <a href={outlet.url} target="_blank" rel="noopener" class={`press__logo-item press__logo-item--${outlet.slug}`}>
             {outlet.name}
           </a>
         ))}
@@ -204,16 +208,11 @@ const featuredVideos = [
     z-index: 0;
   }
 
-  .hero__img-placeholder {
+  .hero__img {
     width: 100%;
     height: 100%;
-    background: linear-gradient(
-      135deg,
-      #0c0c0c 0%,
-      #1a1209 40%,
-      #261500 70%,
-      #1a0c00 100%
-    );
+    object-fit: cover;
+    object-position: center 30%;
   }
 
   .hero__overlay {
@@ -384,19 +383,80 @@ const featuredVideos = [
   }
 
   .press__logo-item {
-    font-family: var(--font-display);
-    font-size: 1.25rem;
-    letter-spacing: 0.08em;
-    color: var(--color-text-faint);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     padding: 0.75rem 1.5rem;
     border: 1px solid var(--color-border);
     transition: all 0.2s ease;
-    text-transform: uppercase;
+    filter: grayscale(1) opacity(0.5);
+    text-decoration: none;
   }
 
   .press__logo-item:hover {
-    color: var(--color-text);
-    border-color: var(--color-accent);
+    filter: grayscale(0) opacity(1);
+    border-color: transparent;
+  }
+
+  /* CNN */
+  .press__logo-item--cnn {
+    font-family: 'Georgia', serif;
+    font-size: 1.375rem;
+    font-weight: 700;
+    font-style: italic;
+    letter-spacing: 0.02em;
+    color: #cc0000;
+    background: transparent;
+  }
+
+  /* The Guardian */
+  .press__logo-item--guardian {
+    font-family: 'Georgia', serif;
+    font-size: 1.0625rem;
+    font-weight: 700;
+    color: #052962;
+    letter-spacing: -0.01em;
+    background: transparent;
+  }
+
+  /* Runner's World */
+  .press__logo-item--runners-world {
+    font-family: 'Arial Narrow', 'Arial', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #e63429;
+  }
+
+  /* Outside */
+  .press__logo-item--outside {
+    font-family: 'Georgia', serif;
+    font-size: 1.375rem;
+    font-style: italic;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #1d7a5f;
+  }
+
+  /* iRunFar */
+  .press__logo-item--irunfar {
+    font-family: var(--font-body);
+    font-size: 0.9375rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    color: #e87722;
+    text-transform: lowercase;
+  }
+
+  /* Trail Runner */
+  .press__logo-item--trail-runner {
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #8b5e3c;
   }
 
   /* ---- Videos preview ---- */
