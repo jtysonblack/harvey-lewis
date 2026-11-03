@@ -48,12 +48,15 @@ const timeline = [
           <div class="bio__quick-facts">
             <p class="eyebrow" style="margin-bottom: 1rem;">Quick Facts</p>
             <ul class="facts-list">
-              <li><span class="facts-list__label">Age</span><span>49</span></li>
+              <li><span class="facts-list__label">Age</span><span>50</span></li>
               <li><span class="facts-list__label">From</span><span>Cincinnati, OH</span></li>
-              <li><span class="facts-list__label">Day Job</span><span>High School Teacher, SCPA</span></li>
+              <li><span class="facts-list__label">Day Job</span><span>High School Teacher</span></li>
               <li><span class="facts-list__label">Diet</span><span>Vegan</span></li>
               <li><span class="facts-list__label">Record</span><span>450 mi / 108 hrs (2023)</span></li>
-              <li><span class="facts-list__label">Sponsors</span><span>Rappid, Newton Running, Road ID</span></li>
+              <li class="facts-list__sponsors-row">
+                <span class="facts-list__label">Sponsors</span>
+                <span>Rappid, Squirrel's Nut Butter, &amp; Tailwind</span>
+              </li>
             </ul>
           </div>
         </div>
@@ -258,6 +261,16 @@ const timeline = [
     letter-spacing: 0.1em;
     font-weight: 600;
     padding-top: 0.125rem;
+  }
+
+  .facts-list__sponsors-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .facts-list__sponsors-row .facts-list__label {
+    padding-top: 0;
   }
 
   .bio__heading {
