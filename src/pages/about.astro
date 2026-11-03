@@ -54,10 +54,7 @@ const timeline = [
               <li><span class="facts-list__label">Day Job</span><span>High School Teacher</span></li>
               <li><span class="facts-list__label">Diet</span><span>Vegan</span></li>
               <li><span class="facts-list__label">Record</span><span>450 mi / 108 hrs (2023)</span></li>
-              <li class="facts-list__sponsors-row">
-                <span class="facts-list__label">Sponsors</span>
-                <span>Rappid, Squirrel's Nut Butter, &amp; Tailwind</span>
-              </li>
+              <li><span class="facts-list__label">Sponsors</span><span class="facts-list__sponsors-val">Rappid, Squirrel's Nut Butter, &amp; Tailwind</span></li>
             </ul>
           </div>
         </div>
@@ -264,14 +261,8 @@ const timeline = [
     padding-top: 0.125rem;
   }
 
-  .facts-list__sponsors-row {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
-  }
-
-  .facts-list__sponsors-row .facts-list__label {
-    padding-top: 0;
+  .facts-list__sponsors-val {
+    text-align: right;
   }
 
   .bio__heading {
