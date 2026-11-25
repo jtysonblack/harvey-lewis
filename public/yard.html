@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Harvey Lewis — The Yard</title>
+  <meta name="description" content="Run 4.1 miles. Every hour. Until one remains. Harvey Lewis — Backyard Ultra World Record Holder." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,400;0,700;0,900;1,700;1,900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bell:       #FF2D2D;
+      --bell-dim:   rgba(255, 45, 45, 0.35);
+      --bell-faint: rgba(255, 45, 45, 0.08);
+      --bg:         #050508;
+      --bg-2:       #0A0A12;
+      --bg-3:       #0F0F18;
+      --text:       rgba(255, 255, 255, 0.93);
+      --text-muted: rgba(255, 255, 255, 0.42);
+      --border:     rgba(255, 255, 255, 0.08);
+      --cut:        36px;   /* corner cut size for cells */
+      --slash:      80px;   /* section diagonal offset */
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Barlow Condensed', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* ── SWITCHER ──────────────────────────────────────────── */
+    .switcher {
+      position: fixed;
+      top: 1.25rem;
+      right: 1.5rem;
+      z-index: 300;
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .switcher__btn {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 0.35rem 0.7rem;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      background: rgba(5, 5, 8, 0.92);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: color 0.2s, border-color 0.2s;
+      clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
+    }
+
+    .switcher__btn:hover { color: var(--text); border-color: rgba(255,255,255,0.18); }
+
+    .switcher__btn--active {
+      color: var(--bell);
+      border-color: var(--bell-dim);
+      background: rgba(255, 45, 45, 0.06);
+    }
+
+    /* ── NAV ───────────────────────────────────────────────── */
+    .nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 1.5rem;
+      pointer-events: none;
+    }
+
+    .nav__mark {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      pointer-events: auto;
+      text-decoration: none;
+    }
+
+    .nav__links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+      pointer-events: auto;
+    }
+
+    .nav__links a {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav__links a:hover { color: var(--text); }
+
+    /* ── HERO ──────────────────────────────────────────────── */
+    /* Bottom edge: hard diagonal slash right-to-left */
+    .hero {
+      position: relative;
+      z-index: 10;
+      height: 100vh;
+      min-height: 640px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      /* Slash bottom: drop 100px on the left, flush right */
+      clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--slash)), 0 100%);
+      padding-bottom: 8rem;
+    }
+
+    #yardCanvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .hero__content {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 0 2rem;
+      max-width: 900px;
+      width: 100%;
+    }
+
+    .hero__attr {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 2.5rem;
+    }
+
+    .hero__format {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero__format-line {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(4rem, 13vw, 9rem);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      line-height: 0.92;
+      color: var(--text);
+      text-transform: uppercase;
+    }
+
+    .hero__format-line--dim {
+      font-size: clamp(2.2rem, 7vw, 5rem);
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.48);
+    }
+
+    .hero__format-accent { color: var(--bell); }
+
+    .hero__rule {
+      width: 100%;
+      height: 1px;
+      background: var(--border);
+      margin: 0 0 2rem;
+    }
+
+    .hero__achieve {
+      display: flex;
+      gap: 0;
+      align-items: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .achieve-stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 2rem;
+      border-right: 1px solid var(--border);
+    }
+
+    .achieve-stat:last-child { border-right: none; }
+
+    .achieve-stat__val {
+      font-family: 'Space Mono', monospace;
+      font-size: clamp(1rem, 2.5vw, 1.5rem);
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .achieve-stat__label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.46rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    .hero__bell {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .hero__bell-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.52rem;
+      letter-spacing: 0.26em;
+      text-transform: uppercase;
+      color: var(--bell-dim);
+    }
+
+    .hero__countdown {
+      font-family: 'Space Mono', monospace;
+      font-size: clamp(2.5rem, 8vw, 5rem);
+      font-weight: 700;
+      color: var(--bell);
+      letter-spacing: 0.05em;
+      line-height: 1;
+      text-shadow: 0 0 40px rgba(255, 45, 45, 0.4);
+    }
+
+    .hero__countdown .colon { animation: colon-pulse 1s step-end infinite; }
+
+    @keyframes colon-pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.1; }
+    }
+
+    .hero__bell-sub {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.48rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.18);
+      margin-top: 0.5rem;
+    }
+
+    .bell-rang { animation: bell-flash 0.5s ease-in-out 6; }
+
+    @keyframes bell-flash {
+      0%, 100% { color: var(--bell); }
+      50%       { color: #fff; text-shadow: 0 0 60px rgba(255,255,255,0.8); }
+    }
+
+    .hero__scroll {
+      position: absolute;
+      bottom: 5rem; /* above the clip */
+      right: 1.5rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.5rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      opacity: 0.4;
+      animation: blink 2.4s infinite;
+      z-index: 10;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 0.4; }
+      50%       { opacity: 0.1; }
+    }
+
+    /* ── STATS STRIP — full parallelogram ──────────────────── */
+    /* Slides up into the hero's slashed bottom. Diamond shape. */
+    .stats-strip {
+      position: relative;
+      z-index: 9;
+      background: var(--bg-2);
+      margin-top: calc(-1 * var(--slash));
+      clip-path: polygon(0 var(--slash), 100% 0, 100% calc(100% - var(--slash)), 0 100%);
+      padding: calc(var(--slash) + 2.5rem) 0;
+    }
+
+    .stats-strip__inner {
+      display: flex;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .strip-stat {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1rem;
+      border-right: 1px solid var(--border);
+    }
+
+    .strip-stat:last-child { border-right: none; }
+
+    .strip-stat__val {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(1.75rem, 4vw, 3rem);
+      font-weight: 900;
+      color: var(--text);
+      line-height: 1;
+    }
+
+    .strip-stat__val .accent { color: var(--bell); }
+
+    .strip-stat__label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.46rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-top: 0.4rem;
+    }
+
+    /* ── SECTION SHARED ────────────────────────────────────── */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    .eyebrow {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.52rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--bell);
+      display: block;
+      margin-bottom: 1.25rem;
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin-bottom: 2.5rem;
+    }
+
+    /* ── FORMAT SECTION — opposing slash ───────────────────── */
+    /* Goes the other direction: rises left-to-right */
+    .format-section {
+      position: relative;
+      z-index: 8;
+      background: var(--bg-2);
+      margin-top: calc(-1 * var(--slash));
+      clip-path: polygon(0 0, 100% var(--slash), 100% calc(100% - var(--slash)), 0 100%);
+      padding: calc(var(--slash) + 4.5rem) 0;
+    }
+
+    .format__heading {
+      font-size: clamp(3rem, 7vw, 5rem);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+      line-height: 0.92;
+      margin-bottom: 3rem;
+    }
+
+    /* Grid: gap+background makes the 1px border; clip-path on cells cuts corners */
+    .format-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      background: var(--border);
+    }
+
+    /* Each cell: top-right corner slashed off */
+    .format-cell {
+      background: var(--bg-2);
+      padding: 2.25rem 2rem 2.5rem;
+      clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, 0 100%);
+    }
+
+    .format-cell__num {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 4rem;
+      font-weight: 900;
+      color: var(--bell);
+      line-height: 1;
+      margin-bottom: 0.1rem;
+    }
+
+    .format-cell__unit {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.5rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 1.25rem;
+    }
+
+    .format-cell__desc {
+      font-size: 0.9rem;
+      font-weight: 300;
+      color: var(--text-muted);
+      line-height: 1.7;
+      letter-spacing: 0.025em;
+    }
+
+    /* ── ABOUT SECTION — steep left rise ──────────────────── */
+    .about-section {
+      position: relative;
+      z-index: 7;
+      background: var(--bg);
+      margin-top: calc(-1 * var(--slash));
+      clip-path: polygon(0 var(--slash), 100% 0, 100% 100%, 0 calc(100% - var(--slash)));
+      padding: calc(var(--slash) + 5rem) 0;
+    }
+
+    .about__inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: start;
+    }
+
+    .about__heading {
+      font-size: clamp(3rem, 7vw, 5.5rem);
+      font-weight: 900;
+      letter-spacing: -0.01em;
+      line-height: 0.92;
+      margin-bottom: 2.5rem;
+      text-transform: uppercase;
+    }
+
+    .about__heading em { font-style: italic; color: var(--bell); }
+
+    .about__body p {
+      color: var(--text-muted);
+      line-height: 1.9;
+      font-size: 1rem;
+      font-weight: 300;
+      letter-spacing: 0.025em;
+      margin-bottom: 1.25rem;
+    }
+
+    .about__body p strong { color: var(--text); font-weight: 700; }
+
+    .about__tag {
+      display: inline-block;
+      margin-top: 1.5rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.52rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--bell);
+      border: 1px solid var(--bell-dim);
+      padding: 0.3rem 0.65rem;
+      clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
+    }
+
+    .about__photo-col { position: sticky; top: 6rem; }
+
+    /* Photo frame: top-right and bottom-left corners cut */
+    .about__photo-wrap {
+      aspect-ratio: 3/4;
+      overflow: hidden;
+      clip-path: polygon(0 0, calc(100% - 40px) 0, 100% 40px, 100% 100%, 40px 100%, 0 calc(100% - 40px));
+    }
+
+    .about__photo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      filter: grayscale(30%) contrast(1.05) brightness(0.88);
+      transition: transform 0.6s ease;
+    }
+
+    .about__photo-wrap:hover .about__photo { transform: scale(1.03); }
+
+    /* ── RECORDS SECTION — opposing slash ──────────────────── */
+    .records-section {
+      position: relative;
+      z-index: 6;
+      background: var(--bg-2);
+      margin-top: calc(-1 * var(--slash));
+      clip-path: polygon(0 0, 100% var(--slash), 100% calc(100% - var(--slash)), 0 100%);
+      padding: calc(var(--slash) + 4.5rem) 0;
+    }
+
+    .records__heading {
+      font-size: clamp(4rem, 11vw, 9rem);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: -0.02em;
+      line-height: 0.88;
+      margin-bottom: 3.5rem;
+    }
+
+    /* Record grid: each cell has BOTH corners cut (hexagonal) */
+    .records-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      background: var(--border);
+      margin-bottom: 4.5rem;
+    }
+
+    .record-cell {
+      background: var(--bg-2);
+      padding: 2.5rem 2rem;
+      clip-path: polygon(
+        0 0,
+        calc(100% - var(--cut)) 0,
+        100% var(--cut),
+        100% 100%,
+        var(--cut) 100%,
+        0 calc(100% - var(--cut))
+      );
+    }
+
+    .record-cell__num {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(3.5rem, 7vw, 6rem);
+      font-weight: 900;
+      color: var(--bell);
+      line-height: 1;
+      margin-bottom: 0.1rem;
+    }
+
+    .record-cell__unit {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.5rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 1.25rem;
+    }
+
+    .record-cell__desc {
+      font-size: 0.9rem;
+      font-weight: 300;
+      color: var(--text-muted);
+      line-height: 1.7;
+      letter-spacing: 0.025em;
+    }
+
+    /* Timeline */
+    .tl-item {
+      display: grid;
+      grid-template-columns: 80px 1px 1fr;
+      gap: 0 1.5rem;
+      padding: 1.25rem 0;
+      border-bottom: 1px solid var(--border);
+      align-items: center;
+    }
+
+    .tl-item:last-child { border-bottom: none; }
+
+    .tl-item__year {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      color: var(--bell);
+    }
+
+    .tl-item__line { width: 1px; height: 100%; background: var(--border); }
+
+    .tl-item__event {
+      font-size: 0.9375rem;
+      font-weight: 300;
+      color: var(--text-muted);
+      letter-spacing: 0.025em;
+    }
+
+    /* ── SPONSORS SECTION — left-side rise ─────────────────── */
+    .sponsors-section {
+      position: relative;
+      z-index: 5;
+      background: var(--bg);
+      margin-top: calc(-1 * var(--slash));
+      clip-path: polygon(0 var(--slash), 100% 0, 100% 100%, 0 100%);
+      padding: calc(var(--slash) + 4.5rem) 0 6rem;
+    }
+
+    .sponsors__heading {
+      font-size: clamp(3rem, 7vw, 5.5rem);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+      line-height: 0.92;
+      margin-bottom: 3rem;
+    }
+
+    /* Sponsor cards: top-right corner cut */
+    .sponsors-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      background: var(--border);
+    }
+
+    .sponsor-item {
+      background: var(--bg);
+      padding: 2.5rem 2rem;
+      text-decoration: none;
+      display: block;
+      transition: background 0.2s;
+      clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, 0 100%);
+    }
+
+    .sponsor-item:hover { background: rgba(255, 45, 45, 0.03); }
+
+    .sponsor-item__cat {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.48rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--bell-dim);
+      margin-bottom: 0.75rem;
+    }
+
+    .sponsor-item__name {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 2.25rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text);
+      margin-bottom: 1.1rem;
+      line-height: 1;
+    }
+
+    .sponsor-item__name--rappid { font-style: italic; text-transform: none; letter-spacing: -0.02em; }
+
+    .sponsor-item__desc {
+      font-size: 0.875rem;
+      font-weight: 300;
+      color: var(--text-muted);
+      line-height: 1.75;
+      letter-spacing: 0.025em;
+      margin-bottom: 1.5rem;
+    }
+
+    .sponsor-item__link {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--bell);
+    }
+
+    /* ── FOOTER ────────────────────────────────────────────── */
+    .footer {
+      position: relative;
+      z-index: 4;
+      background: var(--bg);
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 0;
+    }
+
+    .footer__inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer__name {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 900;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .footer__links { display: flex; gap: 2rem; list-style: none; }
+
+    .footer__links a {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.52rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer__links a:hover { color: var(--text); }
+
+    .footer__copy {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.48rem;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      opacity: 0.4;
+    }
+
+    /* ── RESPONSIVE ────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      :root { --slash: 50px; --cut: 24px; }
+      .about__inner { grid-template-columns: 1fr; gap: 3rem; }
+      .about__photo-col { position: static; order: -1; }
+      .about__photo-wrap { aspect-ratio: 4/3; }
+      .records-grid { grid-template-columns: 1fr; }
+      .format-grid { grid-template-columns: 1fr; }
+      .sponsors-grid { grid-template-columns: 1fr; }
+      .stats-strip__inner { flex-wrap: wrap; }
+      .strip-stat { flex: 0 0 50%; border-right: none; border-bottom: 1px solid var(--border); }
+      .strip-stat:last-child { border-bottom: none; }
+      .hero__achieve { flex-wrap: wrap; gap: 1rem; justify-content: center; }
+      .achieve-stat { border-right: none; padding: 0 1.25rem; }
+      .footer__inner { flex-direction: column; gap: 1.75rem; text-align: center; }
+      .footer__links { flex-wrap: wrap; justify-content: center; }
+    }
+
+    @media (max-width: 560px) {
+      :root { --slash: 36px; }
+      .strip-stat { flex: 0 0 100%; }
+      .nav__links { display: none; }
+      .hero__format-line { font-size: clamp(3rem, 16vw, 5rem); }
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- ── SWITCHER ─────────────────────────────────────────── -->
+  <div class="switcher">
+    <a href="/" class="switcher__btn">Current</a>
+    <a href="/loop.html" class="switcher__btn">The Loop</a>
+    <span class="switcher__btn switcher__btn--active">The Yard</span>
+  </div>
+
+  <!-- ── NAV ──────────────────────────────────────────────── -->
+  <nav class="nav">
+    <a href="/" class="nav__mark">Harvey Lewis</a>
+    <ul class="nav__links">
+      <li><a href="#format">The Format</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#records">Records</a></li>
+    </ul>
+  </nav>
+
+  <!-- ── HERO ─────────────────────────────────────────────── -->
+  <section class="hero">
+
+    <!-- Background: stars + ghost trail + slow runners -->
+    <canvas id="yardCanvas"></canvas>
+
+    <div class="hero__content">
+
+      <p class="hero__attr">Harvey Lewis · Big's Backyard Ultra · Bell Buckle, Tennessee · 2023</p>
+
+      <!-- The format — this IS backyard ultra -->
+      <div class="hero__format">
+        <span class="hero__format-line">Run <span class="hero__format-accent">4.1</span> miles.</span>
+        <span class="hero__format-line hero__format-line--dim">Every hour.</span>
+        <span class="hero__format-line hero__format-line--dim">Until one remains.</span>
+      </div>
+
+      <div class="hero__rule"></div>
+
+      <!-- Harvey's achievement -->
+      <div class="hero__achieve">
+        <div class="achieve-stat">
+          <span class="achieve-stat__val">108</span>
+          <span class="achieve-stat__label">Loops</span>
+        </div>
+        <div class="achieve-stat">
+          <span class="achieve-stat__val">450 mi</span>
+          <span class="achieve-stat__label">Distance</span>
+        </div>
+        <div class="achieve-stat">
+          <span class="achieve-stat__val">108 hrs</span>
+          <span class="achieve-stat__label">Running time</span>
+        </div>
+        <div class="achieve-stat">
+          <span class="achieve-stat__val">2023</span>
+          <span class="achieve-stat__label">World record</span>
+        </div>
+      </div>
+
+      <!-- Countdown to next bell -->
+      <div class="hero__bell">
+        <p class="hero__bell-label" id="bell-status">Bell rings in</p>
+        <div class="hero__countdown" id="countdown-display">
+          <span id="cd-mins">47</span><span class="colon">:</span><span id="cd-secs">00</span>
+        </div>
+        <p class="hero__bell-sub">If you're not at the start when it rings — you're out.</p>
+      </div>
+
+    </div>
+
+    <span class="hero__scroll" aria-hidden="true">↓ scroll</span>
+  </section>
+
+  <!-- ── STATS STRIP ───────────────────────────────────────── -->
+  <div class="stats-strip">
+    <div class="stats-strip__inner">
+      <div class="strip-stat">
+        <span class="strip-stat__val"><span class="accent">108</span></span>
+        <span class="strip-stat__label">Loops completed</span>
+      </div>
+      <div class="strip-stat">
+        <span class="strip-stat__val">450 mi</span>
+        <span class="strip-stat__label">Total distance</span>
+      </div>
+      <div class="strip-stat">
+        <span class="strip-stat__val">108 hrs</span>
+        <span class="strip-stat__label">Elapsed time</span>
+      </div>
+      <div class="strip-stat">
+        <span class="strip-stat__val"><span class="accent">4.1</span> mi</span>
+        <span class="strip-stat__label">Per loop</span>
+      </div>
+      <div class="strip-stat">
+        <span class="strip-stat__val">2×</span>
+        <span class="strip-stat__label">Backyard champion</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── FORMAT EXPLAINER ──────────────────────────────────── -->
+  <section class="section format-section" id="format">
+    <div class="container">
+      <span class="eyebrow">The Format</span>
+      <div class="divider"></div>
+      <h2 class="format__heading">What is a<br />Backyard Ultra?</h2>
+
+      <div class="format-grid">
+        <div class="format-cell">
+          <div class="format-cell__num">4.1</div>
+          <div class="format-cell__unit">Miles per loop</div>
+          <div class="format-cell__desc">Every loop is exactly 4.167 miles — 6.7 kilometers. A trail circuit that starts and ends at the corral. You run it. Then you do it again.</div>
+        </div>
+        <div class="format-cell">
+          <div class="format-cell__num">:00</div>
+          <div class="format-cell__unit">On the hour</div>
+          <div class="format-cell__desc">The bell rings at the top of every hour. You have 60 minutes to complete the loop and return. Fail to make it back in time — the race is over for you.</div>
+        </div>
+        <div class="format-cell">
+          <div class="format-cell__num">1</div>
+          <div class="format-cell__unit">Last person standing</div>
+          <div class="format-cell__desc">There is no finish line. The race ends when only one runner completes a loop that no other runner can finish. That person wins. Usually, nobody wins.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── ABOUT ─────────────────────────────────────────────── -->
+  <section class="section about-section" id="about">
+    <div class="container">
+      <span class="eyebrow">The Athlete</span>
+      <div class="divider"></div>
+      <div class="about__inner">
+        <div>
+          <h2 class="about__heading">The teacher<br />who runs<br /><em>forever.</em></h2>
+          <div class="about__body">
+            <p>Harvey Lewis is a high school teacher from Cincinnati, Ohio. He coaches, grades papers, and shows up to class on Monday morning — sometimes days after running 450 miles through the Tennessee backwoods without sleeping.</p>
+            <p><strong>He is vegan.</strong> He credits his plant-based diet for his recovery speed and his ability to stay on his feet for days at a time. Between loops at Big's Backyard Ultra, he eats pad Thai and muffins.</p>
+            <p>Harvey first came to world attention at the 2021 edition of Big's Backyard Ultra, setting a world record with 354 miles. In 2023, he obliterated it — 108 consecutive loops, 450 miles, 108 hours. Four and a half days of running. The teacher from Cincinnati ran further than any human ever had.</p>
+            <p>Before all of that: Gandhi's Salt March (241 miles across India), Selma to Montgomery, Team USA at four IAU 24-Hour World Championships, the Badwater 135. The running was always tied to something larger than the sport.</p>
+            <span class="about__tag">Cincinnati, OH · SCPA · Plant-Based · World Record Holder</span>
+          </div>
+        </div>
+        <div class="about__photo-col">
+          <div class="about__photo-wrap">
+            <img src="/images/harvey-lewis-ultrarunner.jpg" alt="Harvey Lewis" class="about__photo" loading="lazy" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── RECORDS ───────────────────────────────────────────── -->
+  <section class="section records-section" id="records">
+    <div class="container">
+      <span class="eyebrow">Performance</span>
+      <div class="divider"></div>
+      <h2 class="records__heading">The<br />Record.</h2>
+
+      <div class="records-grid">
+        <div class="record-cell">
+          <div class="record-cell__num">450</div>
+          <div class="record-cell__unit">Miles · 2023 World Record</div>
+          <div class="record-cell__desc">Total distance at Big's Backyard Ultra 2023. The furthest any human has run in this format.</div>
+        </div>
+        <div class="record-cell">
+          <div class="record-cell__num">108</div>
+          <div class="record-cell__unit">Hours · 4.5 Days</div>
+          <div class="record-cell__desc">Consecutive hours running. No sleep. Every 60 minutes, the bell rang. Every 60 minutes, he answered it.</div>
+        </div>
+        <div class="record-cell">
+          <div class="record-cell__num">108</div>
+          <div class="record-cell__unit">Loops · 4.1 Mi Each</div>
+          <div class="record-cell__desc">108 times through the same trail. The same trees, the same rocks — until one person remained.</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="tl-item">
+          <span class="tl-item__year">2008</span>
+          <div class="tl-item__line"></div>
+          <span class="tl-item__event">Retraced Gandhi's Salt March — 241 miles across India</span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-item__year">2009</span>
+          <div class="tl-item__line"></div>
+          <span class="tl-item__event">Retraced MLK's Selma to Montgomery march</span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-item__year">2012–17</span>
+          <div class="tl-item__line"></div>
+          <span class="tl-item__event">Represented Team USA at IAU 24-Hour World Championship (4 times)</span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-item__year">2014</span>
+          <div class="tl-item__line"></div>
+          <span class="tl-item__event">Won Badwater 135 in 23:52:55 — 135 miles through Death Valley</span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-item__year">2021</span>
+          <div class="tl-item__line"></div>
+          <span class="tl-item__event">Won Big's Backyard Ultra — 354 miles, world record at the time</span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-item__year">2023</span>
+          <div class="tl-item__line"></div>
+          <span class="tl-item__event">Won Big's Backyard Ultra — 450 miles / 108 hours. New world record.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SPONSORS ───────────────────────────────────────────── -->
+  <section class="section sponsors-section">
+    <div class="container">
+      <span class="eyebrow">Partners</span>
+      <div class="divider"></div>
+      <h2 class="sponsors__heading">Supported<br />By.</h2>
+      <div class="sponsors-grid">
+        <a href="https://www.rappid.run" target="_blank" rel="noopener" class="sponsor-item">
+          <div class="sponsor-item__cat">Apparel</div>
+          <div class="sponsor-item__name sponsor-item__name--rappid">rappid.</div>
+          <div class="sponsor-item__desc">Performance running apparel built for athletes who push limits. Harvey is a Rappid athlete — wearing their gear through the longest efforts in the sport.</div>
+          <div class="sponsor-item__link">rappid.run →</div>
+        </a>
+        <a href="https://www.newtonrunning.com" target="_blank" rel="noopener" class="sponsor-item">
+          <div class="sponsor-item__cat">Footwear</div>
+          <div class="sponsor-item__name">Newton</div>
+          <div class="sponsor-item__desc">Performance footwear engineered for natural motion and efficiency. Harvey has run thousands of miles in Newtons — from Death Valley to the Tennessee backwoods.</div>
+          <div class="sponsor-item__link">newtonrunning.com →</div>
+        </a>
+        <a href="https://www.roadid.com" target="_blank" rel="noopener" class="sponsor-item">
+          <div class="sponsor-item__cat">Safety & ID</div>
+          <div class="sponsor-item__name">Road ID</div>
+          <div class="sponsor-item__desc">Wearable ID for athletes. When you're running for four days in the Tennessee hills, making sure people know who you are matters.</div>
+          <div class="sponsor-item__link">roadid.com →</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ────────────────────────────────────────────── -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__inner">
+        <span class="footer__name">Harvey Lewis</span>
+        <ul class="footer__links">
+          <li><a href="https://instagram.com/harveylewisultra" target="_blank" rel="noopener">Instagram</a></li>
+          <li><a href="https://youtube.com/@HarveyandKelly" target="_blank" rel="noopener">YouTube</a></li>
+          <li><a href="mailto:info@harveylewis.run">Contact</a></li>
+        </ul>
+        <span class="footer__copy">Harvey Lewis · harveylewis.netlify.app</span>
+      </div>
+    </div>
+  </footer>
+
+
+  <script>
+    // ─────────────────────────────────────────────────────────
+    // THE YARD — Background canvas
+    // Stars · Ghost course trail · Slow runner dots
+    // The course IS the background — not a decoration
+    // ─────────────────────────────────────────────────────────
+
+    const canvas = document.getElementById('yardCanvas');
+    const ctx    = canvas.getContext('2d');
+    let W, H;
+
+    // Same trail waypoints as THE LOOP — shared course identity
+    const WPT = [
+      [0.12, 0.52],
+      [0.20, 0.50],
+      [0.30, 0.47],
+      [0.42, 0.43],
+      [0.54, 0.36],
+      [0.64, 0.28],
+      [0.72, 0.21],
+      [0.79, 0.16],
+      [0.84, 0.13],
+      [0.88, 0.12],
+      [0.91, 0.14],
+      [0.92, 0.19],
+      [0.90, 0.27],
+      [0.86, 0.37],
+      [0.80, 0.47],
+      [0.72, 0.57],
+      [0.61, 0.64],
+      [0.50, 0.68],
+      [0.38, 0.69],
+      [0.28, 0.68],
+      [0.19, 0.67],
+      [0.12, 0.64],
+      [0.08, 0.58],
+      [0.09, 0.52],
+    ];
+
+    function crPt(p0, p1, p2, p3, t) {
+      const t2 = t*t, t3 = t2*t;
+      return [
+        .5*((2*p1[0])+(-p0[0]+p2[0])*t+(2*p0[0]-5*p1[0]+4*p2[0]-p3[0])*t2+(-p0[0]+3*p1[0]-3*p2[0]+p3[0])*t3),
+        .5*((2*p1[1])+(-p0[1]+p2[1])*t+(2*p0[1]-5*p1[1]+4*p2[1]-p3[1])*t2+(-p0[1]+3*p1[1]-3*p2[1]+p3[1])*t3)
+      ];
+    }
+
+    function buildPath(W, H) {
+      const n = WPT.length;
+      const pts = [];
+      for (let i = 0; i < n; i++) {
+        const p0 = WPT[(i-1+n)%n], p1 = WPT[i];
+        const p2 = WPT[(i+1)%n],   p3 = WPT[(i+2)%n];
+        for (let j = 0; j < 100; j++) {
+          const [nx, ny] = crPt(p0, p1, p2, p3, j/100);
+          pts.push([nx * W, ny * H]);
+        }
+      }
+      return pts;
+    }
+
+    let pathPts = [];
+
+    // Fixed star positions (generated once)
+    const STARS = Array.from({ length: 90 }, () => ({
+      x: Math.random(),
+      y: Math.random() * 0.85,
+      r: Math.random() * 1.2 + 0.2,
+      base: 0.12 + Math.random() * 0.28,
+      phase: Math.random() * Math.PI * 2,
+      freq: 0.012 + Math.random() * 0.018,
+    }));
+
+    // 4 runner dots spread around the course
+    const RUNNERS = [0, 0.25, 0.52, 0.77].map(frac => ({
+      pidx: 0,
+      offset: frac,
+      speed: 0.15 + Math.random() * 0.05,
+    }));
+
+    function setSize() {
+      W = canvas.width  = canvas.offsetWidth  || window.innerWidth;
+      H = canvas.height = canvas.offsetHeight || window.innerHeight;
+      pathPts = buildPath(W, H);
+      RUNNERS.forEach(r => { r.pidx = Math.floor(r.offset * pathPts.length); });
+    }
+
+    window.addEventListener('resize', setSize);
+    setSize();
+
+    let frame = 0;
+
+    function animate() {
+      frame++;
+      ctx.clearRect(0, 0, W, H);
+
+      // Stars
+      STARS.forEach(s => {
+        const a = s.base + Math.sin(frame * s.freq + s.phase) * 0.12;
+        ctx.beginPath();
+        ctx.arc(s.x * W, s.y * H, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,255,255,${Math.max(0, a)})`;
+        ctx.fill();
+      });
+
+      if (!pathPts.length) { requestAnimationFrame(animate); return; }
+
+      // Ghost trail — very faint, just the shape
+      ctx.beginPath();
+      pathPts.forEach(([x, y], i) => i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y));
+      ctx.closePath();
+      ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+      ctx.lineWidth = 2;
+      ctx.lineJoin = 'round';
+      ctx.stroke();
+
+      // Runner dots — slowly circling the course (like it's 3am, loop 87)
+      RUNNERS.forEach(r => {
+        r.pidx = (r.pidx + r.speed) % pathPts.length;
+        const pt = pathPts[Math.floor(r.pidx)];
+        if (!pt) return;
+
+        // Faint headlamp glow
+        ctx.save();
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = 'rgba(255,255,220,0.5)';
+        ctx.beginPath();
+        ctx.arc(pt[0], pt[1], 2.5, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(255,255,200,0.55)';
+        ctx.fill();
+        ctx.restore();
+      });
+
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    // ── Bell countdown ─────────────────────────────────────────
+    // Simulates the real race: 60-minute loop window
+    let bellSecs = Math.floor(Math.random() * 48 * 60) + 720; // random start 12–60 min
+    const LOOP_SECS = 60 * 60;
+    let ringing = false;
+
+    function pad(n) { return String(n).padStart(2, '0'); }
+
+    function updateBell() {
+      if (ringing) return;
+      bellSecs--;
+
+      if (bellSecs <= 0) {
+        // Bell rings
+        ringing = true;
+        document.getElementById('bell-status').textContent = 'BELL';
+        const cd = document.getElementById('countdown-display');
+        cd.textContent = 'RANG';
+        cd.classList.add('bell-rang');
+        setTimeout(() => {
+          cd.classList.remove('bell-rang');
+          cd.innerHTML = `<span id="cd-mins">60</span><span class="colon">:</span><span id="cd-secs">00</span>`;
+          document.getElementById('bell-status').textContent = 'Bell rings in';
+          bellSecs = LOOP_SECS;
+          ringing = false;
+        }, 4000);
+        return;
+      }
+
+      // Urgent color when under 5 minutes
+      const cd = document.getElementById('countdown-display');
+      if (bellSecs <= 300) {
+        cd.style.animation = 'colon-pulse 0.5s step-end infinite';
+      } else {
+        cd.style.animation = '';
+      }
+
+      const m = Math.floor(bellSecs / 60);
+      const s = bellSecs % 60;
+      const mEl = document.getElementById('cd-mins');
+      const sEl = document.getElementById('cd-secs');
+      if (mEl) mEl.textContent = pad(m);
+      if (sEl) sEl.textContent = pad(s);
+    }
+
+    setInterval(updateBell, 1000);
+    updateBell();
+  </script>
+
+</body>
+</html>

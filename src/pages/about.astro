@@ -4,9 +4,10 @@ import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 
 const timeline = [
-  { year: '2008', event: 'Retraced Gandhi\'s Salt March — 241 miles across India' },
+  { year: '2007', event: 'Retraced Gandhi\'s Salt March — 241 miles across India' },
   { year: '2009', event: 'Retraced MLK\'s Selma to Montgomery march' },
-  { year: '2012–17', event: 'Represented Team USA at IAU 24-Hour World Championship (4 times)' },
+  { year: '2012', event: 'Represented Team USA at IAU 24-Hour World Championship' },
+  { year: '2019', event: 'Represented Team USA at IAU 24-Hour World Championship' },
   { year: '2014', event: 'Won Badwater 135 in 23:52:55 — 135 miles through Death Valley' },
   { year: '2014', event: 'Won SC24 — 154.59 miles in 24 hours' },
   { year: '2020', event: 'Top finisher at Big\'s Backyard Ultra alongside Courtney Dauwalter' },
@@ -46,6 +47,7 @@ const timeline = [
               loading="eager"
             />
           </div>
+          <p class="bio__photo-credit">Photo: Howie Stern</p>
           <div class="bio__quick-facts">
             <p class="eyebrow" style="margin-bottom: 1rem;">Quick Facts</p>
             <ul class="facts-list">
@@ -223,6 +225,14 @@ const timeline = [
   .couple__text p {
     color: var(--color-text-muted);
     line-height: 1.85;
+  }
+
+  .bio__photo-credit {
+    font-size: 0.6875rem;
+    color: var(--color-text-faint);
+    letter-spacing: 0.05em;
+    margin-top: 0.5rem;
+    text-align: right;
   }
 
   .bio__quick-facts {

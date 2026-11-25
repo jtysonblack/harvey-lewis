@@ -1,0 +1,316 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+
+// ─── UPDATE EVENTS HERE ───────────────────────────────────────────────────────
+// month is 0-indexed (0 = January, 1 = February, etc.)
+// day: set to a specific date number, or null if date TBD within the month
+const events = [
+  {
+    year: 2027,
+    month: 1, // February
+    day: null,
+    name: 'Last Soul Ultra',
+    location: 'TBD',
+    type: 'Race',
+    description: '',
+    link: '',
+  },
+];
+// ─────────────────────────────────────────────────────────────────────────────
+
+const eventsJSON = JSON.stringify(events);
+---
+
+<Layout
+  title="Schedule"
+  description="Harvey Lewis's upcoming race schedule, speaking events, and appearances."
+>
+  <Nav />
+
+  <main>
+    <div class="page-hero">
+      <div class="container">
+        <p class="eyebrow page-hero__eyebrow">What's Coming</p>
+        <h1 class="page-hero__title">Schedule</h1>
+        <p class="page-hero__subtitle">
+          Races, speaking engagements, and appearances. Updated a few times a year.
+        </p>
+      </div>
+    </div>
+
+    <section class="section">
+      <div class="container">
+        <div id="cal-root"></div>
+      </div>
+    </section>
+
+    <section class="section book-section">
+      <div class="container">
+        <div class="book-inner">
+          <div class="book-text">
+            <p class="eyebrow">Speaking & Events</p>
+            <div class="divider"></div>
+            <h2 class="book-heading display">Want Harvey<br />at Your Event?</h2>
+            <p class="book-desc">
+              Harvey speaks at conferences, races, schools, and corporate events.
+              For keynotes, pacing appearances, podcast bookings, or brand activations,
+              reach out through the booking form.
+            </p>
+          </div>
+          <div class="book-cta">
+            <div class="book-cta-card">
+              <p class="book-cta-card__title display">Book Harvey</p>
+              <p class="book-cta-card__desc">Speaking, pacing, and event appearances.</p>
+              <a href="/speaking#contact" class="btn btn--primary" style="margin-top:1.5rem;width:100%;justify-content:center;">
+                Send a Booking Request →
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>
+
+<script define:vars={{ eventsJSON }}>
+const events = JSON.parse(eventsJSON);
+
+const MONTH_NAMES = ['January','February','March','April','May','June',
+                     'July','August','September','October','November','December'];
+const DAY_LABELS  = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+function buildCalendar() {
+  const root = document.getElementById('cal-root');
+  if (!root) return;
+
+  const today = new Date();
+  const ty = today.getFullYear();
+  const tm = today.getMonth();
+  const td = today.getDate();
+
+  // Grid wrapper — 3 columns
+  const grid = document.createElement('div');
+  grid.style.cssText = 'display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;';
+  root.appendChild(grid);
+
+  // Build 9 months
+  for (let i = 0; i < 9; i++) {
+    const offset = tm + i;
+    const year  = ty + Math.floor(offset / 12);
+    const month = offset % 12;
+
+    const monthEvents = events.filter(e => e.year === year && e.month === month);
+    const hasEvents   = monthEvents.length > 0;
+    const eventDays   = new Set(monthEvents.filter(e => e.day).map(e => e.day));
+    const isWholeMonth = monthEvents.some(e => !e.day);
+
+    const firstDow   = new Date(year, month, 1).getDay(); // 0=Sun
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    // ── Card ────────────────────────────────────────────────────────────────
+    const card = document.createElement('div');
+    card.style.cssText = `
+      background: var(--color-surface);
+      border: 1px solid ${hasEvents ? 'var(--color-accent)' : 'var(--color-border)'};
+      padding: 1.25rem;
+    `;
+
+    // Month header
+    const hdr = document.createElement('div');
+    hdr.style.cssText = 'display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;';
+    hdr.innerHTML = `
+      <span style="font-family:var(--font-display);font-size:0.9375rem;letter-spacing:0.1em;color:var(--color-text);">
+        ${MONTH_NAMES[month].toUpperCase()}
+      </span>
+      <span style="font-size:0.8125rem;color:var(--color-text-muted);letter-spacing:0.05em;">${year}</span>
+    `;
+    card.appendChild(hdr);
+
+    // Thin accent bar if whole-month event
+    if (isWholeMonth) {
+      const bar = document.createElement('div');
+      bar.style.cssText = `
+        background:var(--color-accent);
+        height:2px;
+        margin-bottom:0.75rem;
+        opacity:0.6;
+      `;
+      card.appendChild(bar);
+    }
+
+    // ── 7-col grid ──────────────────────────────────────────────────────────
+    const calGrid = document.createElement('div');
+    calGrid.style.cssText = `
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 2px;
+    `;
+
+    // Day-of-week headers
+    DAY_LABELS.forEach(d => {
+      const lbl = document.createElement('div');
+      lbl.style.cssText = `
+        text-align:center;
+        font-size:0.5625rem;
+        letter-spacing:0.08em;
+        font-weight:600;
+        color:var(--color-text-faint);
+        padding:0.25rem 0 0.5rem;
+      `;
+      lbl.textContent = d;
+      calGrid.appendChild(lbl);
+    });
+
+    // Empty offset cells
+    for (let o = 0; o < firstDow; o++) {
+      const empty = document.createElement('div');
+      calGrid.appendChild(empty);
+    }
+
+    // Day cells
+    const isCurrentMonth = (year === ty && month === tm);
+    for (let d = 1; d <= daysInMonth; d++) {
+      const cell = document.createElement('div');
+      const isToday  = isCurrentMonth && d === td;
+      const isEvent  = eventDays.has(d);
+      const isPast   = isCurrentMonth ? d < td : (year < ty || (year === ty && month < tm));
+
+      let bg   = 'transparent';
+      let color = isPast ? 'var(--color-text-faint)' : 'var(--color-text-muted)';
+      let fw   = '400';
+      let outline = 'none';
+
+      if (isEvent) {
+        bg    = 'var(--color-accent)';
+        color = '#000';
+        fw    = '700';
+      } else if (isToday) {
+        outline = '1px solid var(--color-accent)';
+        color   = 'var(--color-text)';
+        fw      = '600';
+      } else if (isWholeMonth && !isPast) {
+        bg    = 'rgba(201,155,76,0.12)';
+        color = 'var(--color-text)';
+      }
+
+      cell.style.cssText = `
+        aspect-ratio:1;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        font-size:0.75rem;
+        background:${bg};
+        color:${color};
+        font-weight:${fw};
+        outline:${outline};
+        border-radius:2px;
+      `;
+      cell.textContent = d;
+      calGrid.appendChild(cell);
+    }
+
+    card.appendChild(calGrid);
+
+    // ── Events below the grid ────────────────────────────────────────────────
+    if (monthEvents.length > 0) {
+      const evWrap = document.createElement('div');
+      evWrap.style.cssText = 'margin-top:1rem;padding-top:1rem;border-top:1px solid var(--color-border);';
+
+      monthEvents.forEach(ev => {
+        const evEl = document.createElement('div');
+        evEl.innerHTML = `
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.3rem;">
+            <span style="font-family:var(--font-display);font-size:0.625rem;letter-spacing:0.12em;color:var(--color-accent);">
+              ${ev.day ? `${MONTH_NAMES[ev.month].slice(0,3).toUpperCase()} ${ev.day}` : 'DATE TBD'}
+            </span>
+            <span style="font-size:0.5rem;letter-spacing:0.12em;color:var(--color-text-faint);border:1px solid var(--color-border);padding:0.1rem 0.35rem;">
+              ${ev.type.toUpperCase()}
+            </span>
+          </div>
+          <div style="font-family:var(--font-display);font-size:0.875rem;letter-spacing:0.05em;text-transform:uppercase;color:var(--color-text);line-height:1.3;margin-bottom:0.25rem;">
+            ${ev.name}
+          </div>
+          ${ev.location ? `<div style="font-size:0.75rem;color:var(--color-text-muted);">${ev.location}</div>` : ''}
+          ${ev.description ? `<div style="font-size:0.75rem;color:var(--color-text-muted);margin-top:0.25rem;line-height:1.5;">${ev.description}</div>` : ''}
+          ${ev.link ? `<a href="${ev.link}" target="_blank" rel="noopener" style="font-size:0.75rem;font-weight:600;color:var(--color-accent);margin-top:0.4rem;display:inline-block;">Event Info →</a>` : ''}
+        `;
+        evWrap.appendChild(evEl);
+      });
+
+      card.appendChild(evWrap);
+    }
+
+    grid.appendChild(card);
+  }
+}
+
+buildCalendar();
+
+// Responsive: collapse to 2 or 1 col on smaller screens
+function updateCols() {
+  const grid = document.querySelector('#cal-root > div');
+  if (!grid) return;
+  const w = window.innerWidth;
+  grid.style.gridTemplateColumns = w < 700 ? '1fr' : w < 1050 ? 'repeat(2,1fr)' : 'repeat(3,1fr)';
+}
+window.addEventListener('resize', updateCols);
+updateCols();
+</script>
+
+<style>
+  .book-section {
+    background: var(--color-bg-2);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .book-inner {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 5rem;
+    align-items: start;
+  }
+
+  .book-heading {
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    margin-bottom: 1.5rem;
+  }
+
+  .book-desc {
+    color: var(--color-text-muted);
+    line-height: 1.8;
+    font-size: 0.9375rem;
+  }
+
+  .book-cta-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    padding: 2rem;
+    position: sticky;
+    top: calc(var(--nav-height) + 2rem);
+  }
+
+  .book-cta-card__title {
+    font-size: 1.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .book-cta-card__desc {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    line-height: 1.6;
+  }
+
+  @media (max-width: 768px) {
+    .book-inner {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+    .book-cta-card {
+      position: static;
+    }
+  }
+</style>

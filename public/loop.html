@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Harvey Lewis — The Loop</title>
+  <meta name="description" content="Harvey Lewis. 109 loops. 450 miles. 108 hours. The Backyard Ultra world record." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,400;0,700;0,900;1,700;1,900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gps:        #00F5A0;
+      --gps-dim:    rgba(0, 245, 160, 0.38);
+      --gps-faint:  rgba(0, 245, 160, 0.10);
+      --bg:         #050508;
+      --bg-2:       #080B0F;
+      --bg-3:       #0C1018;
+      --text:       rgba(255, 255, 255, 0.93);
+      --text-muted: rgba(255, 255, 255, 0.42);
+      --border:     rgba(255, 255, 255, 0.07);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 400;
+      overflow-x: hidden;
+    }
+
+    /* ── SWITCHER ──────────────────────────────────────────── */
+    .switcher {
+      position: fixed;
+      top: 1.25rem;
+      right: 1.5rem;
+      z-index: 200;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .switcher__btn {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 0.35rem 0.7rem;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      background: rgba(5, 5, 12, 0.85);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s, background 0.2s;
+    }
+
+    .switcher__btn:hover {
+      color: var(--text);
+      border-color: rgba(255, 255, 255, 0.18);
+    }
+
+    .switcher__btn--active {
+      color: var(--gps);
+      border-color: var(--gps-dim);
+      background: rgba(0, 245, 160, 0.06);
+    }
+
+    .switcher__btn--disabled {
+      opacity: 0.35;
+      cursor: default;
+      pointer-events: none;
+    }
+
+    /* ── NAV ───────────────────────────────────────────────── */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 1.5rem;
+      pointer-events: none;
+    }
+
+    .nav__mark {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--gps);
+      pointer-events: auto;
+      text-decoration: none;
+    }
+
+    .nav__links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+      pointer-events: auto;
+    }
+
+    .nav__links a {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav__links a:hover { color: var(--gps); }
+
+    /* ── HERO ──────────────────────────────────────────────── */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 6rem 2rem 8rem;
+      overflow: hidden;
+    }
+
+    /* Radial bg glow */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 60% 60% at 50% 45%,
+        rgba(0, 245, 160, 0.045) 0%,
+        transparent 70%);
+      pointer-events: none;
+    }
+
+    /* 4.1 watermark */
+    .hero__watermark {
+      position: absolute;
+      bottom: 10%;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(10rem, 28vw, 22rem);
+      font-weight: 900;
+      font-style: italic;
+      letter-spacing: -0.05em;
+      color: rgba(0, 245, 160, 0.028);
+      pointer-events: none;
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    .hero__content {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+
+    /* Canvas */
+    .hero__canvas-wrap {
+      position: relative;
+      width: min(680px, 94vw);
+      aspect-ratio: 5/3;
+    }
+
+    #loopCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* label above circle */
+    .hero__loop-label-top {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gps-dim);
+      text-align: center;
+      margin-bottom: 0.6rem;
+    }
+
+    /* GPS data sidebar — absolute over hero */
+    .hero__gps {
+      position: absolute;
+      right: 3rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 132px;
+      border: 1px solid rgba(0, 245, 160, 0.12);
+      background: rgba(5, 5, 12, 0.6);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .gps-header {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.48rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gps);
+      padding: 0.5rem 0.75rem;
+      border-bottom: 1px solid rgba(0, 245, 160, 0.12);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .gps-header::before {
+      content: '';
+      display: inline-block;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--gps);
+      flex-shrink: 0;
+      animation: blink 1.6s infinite;
+    }
+
+    .gps-row {
+      padding: 0.45rem 0.75rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+    }
+
+    .gps-row:last-child { border-bottom: none; }
+
+    .gps-row__label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.45rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .gps-row__val {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--gps);
+      letter-spacing: 0.04em;
+    }
+
+    /* Loop counter below canvas */
+    .hero__loop {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 1.5rem;
+      line-height: 1;
+    }
+
+    .hero__loop-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--gps-dim);
+      margin-bottom: 0.2rem;
+    }
+
+    .hero__loop-number {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(7rem, 22vw, 13rem);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      line-height: 0.88;
+      animation: glow-pulse 4s ease-in-out infinite;
+    }
+
+    @keyframes glow-pulse {
+      0%, 100% { text-shadow: 0 0 30px rgba(0, 245, 160, 0.12); }
+      50%       { text-shadow: 0 0 60px rgba(0, 245, 160, 0.22), 0 0 120px rgba(0, 245, 160, 0.06); }
+    }
+
+    .hero__athlete-name {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(0.9rem, 2.5vw, 1.25rem);
+      font-weight: 300;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-top: 0.6rem;
+    }
+
+    /* Bottom data bar */
+    .hero__data-bar {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 0;
+      white-space: nowrap;
+    }
+
+    .data-stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0 2rem;
+      border-right: 1px solid var(--border);
+    }
+
+    .data-stat:last-child { border-right: none; }
+
+    .data-stat__val {
+      font-family: 'Space Mono', monospace;
+      font-size: clamp(0.85rem, 2vw, 1.25rem);
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .data-stat__label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.46rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gps-dim);
+    }
+
+    /* Scroll hint */
+    .hero__scroll {
+      position: absolute;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.5rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      animation: blink 2.2s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.2; }
+    }
+
+    /* ── STATS STRIP ───────────────────────────────────────── */
+    .stats-strip {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-2);
+    }
+
+    .stats-strip__inner {
+      display: flex;
+      justify-content: stretch;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .strip-stat {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1rem;
+      border-right: 1px solid var(--border);
+    }
+
+    .strip-stat:last-child { border-right: none; }
+
+    .strip-stat__val {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(1.75rem, 4vw, 3rem);
+      font-weight: 900;
+      color: var(--text);
+      letter-spacing: -0.01em;
+      line-height: 1;
+    }
+
+    .strip-stat__val .accent { color: var(--gps); }
+
+    .strip-stat__label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.46rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-top: 0.4rem;
+    }
+
+    /* ── SECTION SHARED ────────────────────────────────────── */
+    .section { padding: 6rem 0; }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    .eyebrow {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.52rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gps);
+      display: block;
+      margin-bottom: 1.25rem;
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin-bottom: 2.5rem;
+    }
+
+    /* ── ABOUT ─────────────────────────────────────────────── */
+    .about-section {
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .about__inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: start;
+    }
+
+    .about__heading {
+      font-size: clamp(3rem, 7vw, 5.5rem);
+      font-weight: 900;
+      letter-spacing: -0.01em;
+      line-height: 0.92;
+      margin-bottom: 2.5rem;
+      text-transform: uppercase;
+    }
+
+    .about__heading em {
+      font-style: italic;
+      color: var(--gps);
+    }
+
+    .about__body p {
+      color: var(--text-muted);
+      line-height: 1.9;
+      font-size: 1rem;
+      font-weight: 300;
+      letter-spacing: 0.025em;
+      margin-bottom: 1.25rem;
+    }
+
+    .about__body p strong {
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .about__tag {
+      display: inline-block;
+      margin-top: 1.5rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.52rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gps);
+      border: 1px solid var(--gps-dim);
+      padding: 0.3rem 0.65rem;
+    }
+
+    .about__photo-col {
+      position: sticky;
+      top: 6rem;
+    }
+
+    .about__photo-wrap {
+      aspect-ratio: 3/4;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .about__photo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      filter: grayscale(15%) contrast(1.05) brightness(0.92);
+      transition: transform 0.6s ease;
+    }
+
+    .about__photo-wrap:hover .about__photo { transform: scale(1.03); }
+
+    /* ── RECORDS ───────────────────────────────────────────── */
+    .records-section {
+      background: var(--bg-2);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .records__heading {
+      font-size: clamp(4rem, 11vw, 9rem);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: -0.02em;
+      line-height: 0.88;
+      margin-bottom: 3.5rem;
+    }
+
+    .records-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      margin-bottom: 4.5rem;
+    }
+
+    .record-cell {
+      background: var(--bg-2);
+      padding: 2.25rem 2rem;
+    }
+
+    .record-cell__num {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      font-weight: 900;
+      color: var(--gps);
+      line-height: 1;
+      margin-bottom: 0.2rem;
+    }
+
+    .record-cell__unit {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.5rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 1.25rem;
+    }
+
+    .record-cell__desc {
+      font-size: 0.9rem;
+      font-weight: 300;
+      color: var(--text-muted);
+      line-height: 1.7;
+      letter-spacing: 0.025em;
+    }
+
+    /* Timeline */
+    .tl-item {
+      display: grid;
+      grid-template-columns: 80px 1px 1fr;
+      gap: 0 1.5rem;
+      padding: 1.25rem 0;
+      border-bottom: 1px solid var(--border);
+      align-items: center;
+    }
+
+    .tl-item:last-child { border-bottom: none; }
+
+    .tl-item__year {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      color: var(--gps);
+    }
+
+    .tl-item__line {
+      width: 1px;
+      height: 100%;
+      background: var(--border);
+    }
+
+    .tl-item__event {
+      font-size: 0.9375rem;
+      font-weight: 300;
+      color: var(--text-muted);
+      letter-spacing: 0.025em;
+    }
+
+    /* ── SPONSORS ──────────────────────────────────────────── */
+    .sponsors-section {
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .sponsors__heading {
+      font-size: clamp(3rem, 7vw, 5.5rem);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+      line-height: 0.92;
+      margin-bottom: 3rem;
+    }
+
+    .sponsors-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+
+    .sponsor-item {
+      background: var(--bg);
+      padding: 2.5rem 2rem;
+      text-decoration: none;
+      display: block;
+      transition: background 0.2s;
+    }
+
+    .sponsor-item:hover { background: rgba(0, 245, 160, 0.025); }
+
+    .sponsor-item__cat {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.48rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--gps-dim);
+      margin-bottom: 0.75rem;
+    }
+
+    .sponsor-item__name {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 2.25rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text);
+      margin-bottom: 1.1rem;
+      line-height: 1;
+    }
+
+    .sponsor-item__name--rappid {
+      font-style: italic;
+      text-transform: none;
+      letter-spacing: -0.02em;
+    }
+
+    .sponsor-item__desc {
+      font-size: 0.875rem;
+      font-weight: 300;
+      color: var(--text-muted);
+      line-height: 1.75;
+      letter-spacing: 0.025em;
+      margin-bottom: 1.5rem;
+    }
+
+    .sponsor-item__link {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gps);
+    }
+
+    /* ── FOOTER ────────────────────────────────────────────── */
+    .footer {
+      background: var(--bg);
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 0;
+    }
+
+    .footer__inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer__name {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 900;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .footer__links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .footer__links a {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.52rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer__links a:hover { color: var(--gps); }
+
+    .footer__copy {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.48rem;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      opacity: 0.45;
+    }
+
+    /* ── RESPONSIVE ────────────────────────────────────────── */
+    @media (max-width: 1100px) {
+      .hero__gps { display: none; }
+    }
+
+    @media (max-width: 900px) {
+      /* gps already hidden above */
+      .hero__data-bar {
+        position: static;
+        transform: none;
+        margin-top: 2.5rem;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .data-stat {
+        padding: 0 1.25rem;
+        flex: 0 0 auto;
+      }
+      .about__inner {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
+      .about__photo-col {
+        position: static;
+        order: -1;
+      }
+      .about__photo-wrap { aspect-ratio: 4/3; }
+      .records-grid { grid-template-columns: 1fr; }
+      .sponsors-grid { grid-template-columns: 1fr; }
+      .stats-strip__inner { flex-wrap: wrap; }
+      .strip-stat {
+        flex: 0 0 50%;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+      .strip-stat:last-child { border-bottom: none; }
+      .footer__inner {
+        flex-direction: column;
+        gap: 1.75rem;
+        text-align: center;
+      }
+      .footer__links { flex-wrap: wrap; justify-content: center; }
+    }
+
+    @media (max-width: 560px) {
+      .strip-stat { flex: 0 0 100%; }
+      .hero__loop-number { font-size: clamp(5rem, 28vw, 9rem); }
+      .nav__links { display: none; }
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- ── SWITCHER ─────────────────────────────────────── -->
+  <div class="switcher">
+    <a href="/" class="switcher__btn">Current</a>
+    <span class="switcher__btn switcher__btn--active">The Loop</span>
+    <a href="/yard.html" class="switcher__btn">The Yard</a>
+  </div>
+
+  <!-- ── NAV ──────────────────────────────────────────── -->
+  <nav class="nav">
+    <a href="/" class="nav__mark">◉ Harvey Lewis</a>
+    <ul class="nav__links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#records">Records</a></li>
+      <li><a href="#sponsors">Sponsors</a></li>
+    </ul>
+  </nav>
+
+  <!-- ── HERO ─────────────────────────────────────────── -->
+  <section class="hero">
+
+    <!-- 4.1 background watermark -->
+    <span class="hero__watermark" aria-hidden="true">4.1</span>
+
+    <!-- GPS watch sidebar (desktop only) -->
+    <div class="hero__gps" aria-hidden="true">
+      <div class="gps-header">Recording</div>
+      <div class="gps-row">
+        <span class="gps-row__label">Elapsed</span>
+        <span class="gps-row__val">108:14</span>
+      </div>
+      <div class="gps-row">
+        <span class="gps-row__label">Distance</span>
+        <span class="gps-row__val">450.0 mi</span>
+      </div>
+      <div class="gps-row">
+        <span class="gps-row__label">Loop #</span>
+        <span class="gps-row__val">108</span>
+      </div>
+      <div class="gps-row">
+        <span class="gps-row__label">Loop Dist</span>
+        <span class="gps-row__val">4.1 mi</span>
+      </div>
+      <div class="gps-row">
+        <span class="gps-row__label">Pace</span>
+        <span class="gps-row__val">/hr loop</span>
+      </div>
+    </div>
+
+    <div class="hero__content">
+
+      <p class="hero__loop-label-top">4.1 mi per loop · Big's Backyard Ultra · 2023</p>
+
+      <!-- Animated circle canvas -->
+      <div class="hero__canvas-wrap">
+        <canvas id="loopCanvas"></canvas>
+      </div>
+
+      <!-- Loop counter -->
+      <div class="hero__loop">
+        <span class="hero__loop-label">Loop</span>
+        <span class="hero__loop-number">108</span>
+        <span class="hero__athlete-name">Harvey Lewis</span>
+      </div>
+
+    </div>
+
+    <!-- Bottom data bar (mobile: below content) -->
+    <div class="hero__data-bar">
+      <div class="data-stat">
+        <span class="data-stat__val">450</span>
+        <span class="data-stat__label">Miles</span>
+      </div>
+      <div class="data-stat">
+        <span class="data-stat__val">108</span>
+        <span class="data-stat__label">Hours</span>
+      </div>
+      <div class="data-stat">
+        <span class="data-stat__val">4.5</span>
+        <span class="data-stat__label">Days</span>
+      </div>
+      <div class="data-stat">
+        <span class="data-stat__val">2023</span>
+        <span class="data-stat__label">World Record</span>
+      </div>
+    </div>
+
+    <span class="hero__scroll" aria-hidden="true">↓ scroll</span>
+  </section>
+
+  <!-- ── STATS STRIP ───────────────────────────────────── -->
+  <div class="stats-strip">
+    <div class="stats-strip__inner">
+      <div class="strip-stat">
+        <span class="strip-stat__val"><span class="accent">108</span></span>
+        <span class="strip-stat__label">Loops completed</span>
+      </div>
+      <div class="strip-stat">
+        <span class="strip-stat__val">450 mi</span>
+        <span class="strip-stat__label">Total distance</span>
+      </div>
+      <div class="strip-stat">
+        <span class="strip-stat__val">108 hrs</span>
+        <span class="strip-stat__label">Elapsed time</span>
+      </div>
+      <div class="strip-stat">
+        <span class="strip-stat__val"><span class="accent">4.1</span> mi</span>
+        <span class="strip-stat__label">Per loop</span>
+      </div>
+      <div class="strip-stat">
+        <span class="strip-stat__val">2×</span>
+        <span class="strip-stat__label">Backyard champion</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── ABOUT ─────────────────────────────────────────── -->
+  <section class="section about-section" id="about">
+    <div class="container">
+      <span class="eyebrow">The Athlete</span>
+      <div class="divider"></div>
+      <div class="about__inner">
+
+        <div>
+          <h2 class="about__heading">The teacher<br />who runs<br /><em>forever.</em></h2>
+          <div class="about__body">
+            <p>Harvey Lewis is a high school teacher from Cincinnati, Ohio. He coaches, grades papers, and shows up to class on Monday morning — sometimes days after running 450 miles through the Tennessee backwoods without sleeping.</p>
+            <p><strong>He is vegan.</strong> He credits his plant-based diet for his recovery speed and his ability to stay on his feet for days at a time. Between loops at Big's Backyard Ultra, he eats pad Thai and muffins.</p>
+            <p>Harvey first came to world attention at the 2021 edition of Big's Backyard Ultra, setting a world record with 354 miles. In 2023, he obliterated it — 108 consecutive loops, 450 miles, 108 hours. Four and a half days of running. CNN, The Guardian, Runner's World, Outside — all of them came. The teacher from Cincinnati ran further than any human ever had.</p>
+            <p>Before all of that: Gandhi's Salt March (241 miles across India), Selma to Montgomery, Team USA at four IAU 24-Hour World Championships, the Badwater 135. The running was always tied to something larger than the sport.</p>
+            <span class="about__tag">Cincinnati, OH · SCPA · Plant-Based · World Record Holder</span>
+          </div>
+        </div>
+
+        <div class="about__photo-col">
+          <div class="about__photo-wrap">
+            <img
+              src="/images/harvey-lewis-ultrarunner.jpg"
+              alt="Harvey Lewis — ultrarunner and world record holder"
+              class="about__photo"
+              loading="lazy"
+            />
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── RECORDS ───────────────────────────────────────── -->
+  <section class="section records-section" id="records">
+    <div class="container">
+      <span class="eyebrow">Performance</span>
+      <div class="divider"></div>
+
+      <h2 class="records__heading">The<br />Record.</h2>
+
+      <div class="records-grid">
+        <div class="record-cell">
+          <div class="record-cell__num">450</div>
+          <div class="record-cell__unit">Miles · 2023 World Record</div>
+          <div class="record-cell__desc">Total distance covered at Big's Backyard Ultra 2023. The furthest any human has run in this format.</div>
+        </div>
+        <div class="record-cell">
+          <div class="record-cell__num">108</div>
+          <div class="record-cell__unit">Hours · 4.5 Days</div>
+          <div class="record-cell__desc">Consecutive hours on his feet. No sleep. Every 60 minutes, the bell rang. Every 60 minutes, he answered it.</div>
+        </div>
+        <div class="record-cell">
+          <div class="record-cell__num">108</div>
+          <div class="record-cell__unit">Loops · 4.1 Mi Each</div>
+          <div class="record-cell__desc">108 circuits of the same trail. The same trees. The same rocks. Over and over, until one person remained.</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="tl-item">
+          <span class="tl-item__year">2008</span>
+          <div class="tl-item__line"></div>
+          <span class="tl-item__event">Retraced Gandhi's Salt March — 241 miles across India</span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-item__year">2009</span>
+          <div class="tl-item__line"></div>
+          <span class="tl-item__event">Retraced MLK's Selma to Montgomery march</span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-item__year">2012–17</span>
+          <div class="tl-item__line"></div>
+          <span class="tl-item__event">Represented Team USA at IAU 24-Hour World Championship (4 times)</span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-item__year">2014</span>
+          <div class="tl-item__line"></div>
+          <span class="tl-item__event">Won Badwater 135 in 23:52:55 — 135 miles through Death Valley</span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-item__year">2021</span>
+          <div class="tl-item__line"></div>
+          <span class="tl-item__event">Won Big's Backyard Ultra — 354.16 miles, world record at the time</span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-item__year">2023</span>
+          <div class="tl-item__line"></div>
+          <span class="tl-item__event">Won Big's Backyard Ultra — 450 miles in 108 hours. New world record.</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── SPONSORS ───────────────────────────────────────── -->
+  <section class="section sponsors-section" id="sponsors">
+    <div class="container">
+      <span class="eyebrow">Partners</span>
+      <div class="divider"></div>
+      <h2 class="sponsors__heading">Supported<br />By.</h2>
+
+      <div class="sponsors-grid">
+
+        <a href="https://www.rappid.run" target="_blank" rel="noopener" class="sponsor-item">
+          <div class="sponsor-item__cat">Apparel</div>
+          <div class="sponsor-item__name sponsor-item__name--rappid">rappid.</div>
+          <div class="sponsor-item__desc">Performance running apparel built for athletes who push limits. Harvey is a Rappid athlete — wearing their gear through the longest efforts in the sport.</div>
+          <div class="sponsor-item__link">rappid.run →</div>
+        </a>
+
+        <a href="https://www.newtonrunning.com" target="_blank" rel="noopener" class="sponsor-item">
+          <div class="sponsor-item__cat">Footwear</div>
+          <div class="sponsor-item__name">Newton</div>
+          <div class="sponsor-item__desc">Performance footwear engineered for natural motion and efficiency. Harvey has run thousands of miles in Newtons — from Death Valley to the Tennessee backwoods.</div>
+          <div class="sponsor-item__link">newtonrunning.com →</div>
+        </a>
+
+        <a href="https://www.roadid.com" target="_blank" rel="noopener" class="sponsor-item">
+          <div class="sponsor-item__cat">Safety & ID</div>
+          <div class="sponsor-item__name">Road ID</div>
+          <div class="sponsor-item__desc">Wearable ID for athletes. When you're running for four days in the Tennessee hills, making sure people know who you are matters.</div>
+          <div class="sponsor-item__link">roadid.com →</div>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ────────────────────────────────────────── -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__inner">
+        <span class="footer__name">Harvey Lewis</span>
+        <ul class="footer__links">
+          <li><a href="https://instagram.com/harveylewisultra" target="_blank" rel="noopener">Instagram</a></li>
+          <li><a href="https://youtube.com/@HarveyandKelly" target="_blank" rel="noopener">YouTube</a></li>
+          <li><a href="mailto:info@harveylewis.run">Contact</a></li>
+        </ul>
+        <span class="footer__copy">Harvey Lewis · harveylewis.netlify.app</span>
+      </div>
+    </div>
+  </footer>
+
+
+  <script>
+    // ─────────────────────────────────────────────────────────
+    // LOOP CANVAS — Real backyard ultra course shape
+    // Lollipop format: stem from corral + complex winding loop.
+    // Features: two switchbacks on upper ridge, hairpin tip,
+    // descent to creek/valley, long lower traverse, stem return.
+    // Modeled on actual course structure (Big's / BPN G1M style)
+    // ─────────────────────────────────────────────────────────
+
+    const canvas = document.getElementById('loopCanvas');
+    const ctx    = canvas.getContext('2d');
+
+    // Normalized waypoints [x, y] 0–1 — landscape canvas (5:3 ratio)
+    // Corral (Start/Finish) is left-center.
+    // STEM out → northeast, into main loop.
+    // Loop: climb NE → switchback L → traverse ridge R →
+    //        hairpin R-tip → descend → creek/valley → sweep left →
+    //        lower-left curve → stem return crossing → corral.
+    const WPT = [
+      [0.15, 0.55],  // Start / Finish (corral)
+
+      // STEM OUT
+      [0.21, 0.51],
+      [0.27, 0.47],  // junction
+
+      // FIRST CLIMB — heading northeast, gaining elevation
+      [0.33, 0.42],
+      [0.37, 0.35],
+      [0.40, 0.28],
+
+      // FIRST SWITCHBACK — sharp reverse back left at upper section
+      [0.36, 0.23],
+      [0.29, 0.21],
+      [0.23, 0.23],
+
+      // SECOND TRAVERSE — heading right again on upper ridge
+      [0.27, 0.17],
+      [0.35, 0.14],
+      [0.43, 0.12],
+      [0.52, 0.13],
+      [0.60, 0.15],
+
+      // HAIRPIN — technical right-side turn, tip then back left
+      [0.66, 0.18],
+      [0.70, 0.22],
+      [0.73, 0.16],  // hairpin tip (momentary right)
+      [0.77, 0.22],
+
+      // DESCENT — right side, dropping elevation
+      [0.81, 0.29],
+      [0.85, 0.37],
+      [0.86, 0.46],
+
+      // CREEK / VALLEY BOTTOM-RIGHT
+      [0.83, 0.55],
+      [0.78, 0.62],
+      [0.72, 0.66],
+
+      // LONG LOWER SWEEP BACK LEFT — valley traverse
+      [0.63, 0.69],
+      [0.53, 0.71],
+      [0.43, 0.71],
+      [0.33, 0.70],
+      [0.24, 0.68],
+
+      // LOWER-LEFT — hooking back toward corral from below
+      [0.17, 0.65],
+      [0.11, 0.62],
+      [0.08, 0.57],
+      [0.11, 0.51],
+      [0.14, 0.47],  // stem return — path crosses above stem going back
+
+      // STEM RETURN
+      [0.17, 0.53],
+      [0.15, 0.55],  // Back to Start / Finish
+    ];
+
+    // Catmull-Rom interpolation
+    function crPt(p0, p1, p2, p3, t) {
+      const t2 = t*t, t3 = t2*t;
+      return [
+        .5*((2*p1[0])+(-p0[0]+p2[0])*t+(2*p0[0]-5*p1[0]+4*p2[0]-p3[0])*t2+(-p0[0]+3*p1[0]-3*p2[0]+p3[0])*t3),
+        .5*((2*p1[1])+(-p0[1]+p2[1])*t+(2*p0[1]-5*p1[1]+4*p2[1]-p3[1])*t2+(-p0[1]+3*p1[1]-3*p2[1]+p3[1])*t3)
+      ];
+    }
+
+    function buildPath(W, H) {
+      const n = WPT.length;
+      const pts = [];
+      const PER = 100;
+      for (let i = 0; i < n; i++) {
+        const p0 = WPT[(i-1+n)%n], p1 = WPT[i];
+        const p2 = WPT[(i+1)%n],   p3 = WPT[(i+2)%n];
+        for (let j = 0; j < PER; j++) {
+          const [nx, ny] = crPt(p0, p1, p2, p3, j/PER);
+          pts.push([nx * W, ny * H]);
+        }
+      }
+      return pts;
+    }
+
+    let pathPts = [], trail = [], pidx = 0;
+    const TRAIL_MAX = 150;
+    const SPEED     = 2.2; // ~19s per circuit at 60fps with 2500 pts
+
+    function setSize() {
+      canvas.width  = canvas.offsetWidth  || 680;
+      canvas.height = canvas.offsetHeight || 408;
+      pathPts = buildPath(canvas.width, canvas.height);
+      trail = []; pidx = 0;
+    }
+    setSize();
+    window.addEventListener('resize', setSize);
+
+    // Topo ellipses — atmospheric, centered roughly in the loop interior
+    // Loop spans x:0.08–0.86, y:0.12–0.71 → center ≈ x:0.48, y:0.41
+    const TOPOS = [
+      { rxR: 0.18, ryR: 0.22, a: 0.050, ph: 0.0, rot: -0.08 },
+      { rxR: 0.28, ryR: 0.36, a: 0.036, ph: 0.9, rot: -0.07 },
+      { rxR: 0.40, ryR: 0.50, a: 0.024, ph: 1.8, rot: -0.05 },
+      { rxR: 0.52, ryR: 0.64, a: 0.015, ph: 2.7, rot: -0.04 },
+      { rxR: 0.64, ryR: 0.78, a: 0.009, ph: 3.6, rot: -0.03 },
+    ];
+
+    let frame = 0;
+
+    function animate() {
+      frame++;
+      const W = canvas.width, H = canvas.height;
+
+      ctx.clearRect(0, 0, W, H);
+
+      // ── Topo ellipses (atmospheric, breathing) ───────────────
+      const cx = W * 0.48, cy = H * 0.41;
+      TOPOS.forEach(({ rxR, ryR, a, ph, rot }) => {
+        const alpha = a + Math.sin(frame * 0.006 + ph) * 0.010;
+        ctx.beginPath();
+        ctx.ellipse(cx, cy, rxR * W, ryR * H, rot, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(0,245,160,${Math.max(0, alpha)})`;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      });
+
+      if (!pathPts.length) { requestAnimationFrame(animate); return; }
+
+      // ── Trail — outer glow ───────────────────────────────────
+      ctx.beginPath();
+      pathPts.forEach(([x, y], i) => i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y));
+      ctx.closePath();
+      ctx.strokeStyle = 'rgba(0,245,160,0.06)';
+      ctx.lineWidth = 12;
+      ctx.lineJoin = 'round';
+      ctx.stroke();
+
+      // ── Trail — main line ────────────────────────────────────
+      ctx.beginPath();
+      pathPts.forEach(([x, y], i) => i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y));
+      ctx.closePath();
+      ctx.strokeStyle = 'rgba(0,245,160,0.46)';
+      ctx.lineWidth = 1.5;
+      ctx.lineJoin = 'round';
+      ctx.stroke();
+
+      // ── Direction arrows — 3 points along the circuit ────────
+      [0.18, 0.48, 0.75].forEach(frac => {
+        const idx  = Math.floor(pathPts.length * frac);
+        const pt   = pathPts[idx];
+        const next = pathPts[(idx + 8) % pathPts.length];
+        if (!pt || !next) return;
+        const angle = Math.atan2(next[1] - pt[1], next[0] - pt[0]);
+        ctx.save();
+        ctx.translate(pt[0], pt[1]);
+        ctx.rotate(angle);
+        ctx.beginPath();
+        ctx.moveTo(7, 0);
+        ctx.lineTo(-5, -4);
+        ctx.lineTo(-5, 4);
+        ctx.closePath();
+        ctx.fillStyle = 'rgba(0,245,160,0.28)';
+        ctx.fill();
+        ctx.restore();
+      });
+
+      // ── Start / Finish marker ────────────────────────────────
+      const sf = pathPts[0];
+      ctx.beginPath();
+      ctx.arc(sf[0], sf[1], 5.5, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(0,245,160,0.90)';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(sf[0], sf[1], 2.2, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(0,245,160,0.7)';
+      ctx.fill();
+
+      // ── Label ────────────────────────────────────────────────
+      ctx.font = '400 8px "Space Mono", monospace';
+      ctx.textAlign = 'left';
+      ctx.fillStyle = 'rgba(0,245,160,0.38)';
+      ctx.fillText('START / FINISH', sf[0] + 10, sf[1] + 4);
+
+      // ── Advance dot ──────────────────────────────────────────
+      pidx = (pidx + SPEED) % pathPts.length;
+      const dot = pathPts[Math.floor(pidx)];
+
+      trail.push({ x: dot[0], y: dot[1] });
+      if (trail.length > TRAIL_MAX) trail.shift();
+
+      // ── GPS trail ────────────────────────────────────────────
+      trail.forEach((pt, i) => {
+        const t = i / trail.length;
+        ctx.beginPath();
+        ctx.arc(pt.x, pt.y, 0.5 + t * 3.2, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(0,245,160,${t * 0.62})`;
+        ctx.fill();
+      });
+
+      // ── Dot + glow ───────────────────────────────────────────
+      ctx.save();
+      ctx.shadowBlur = 26;
+      ctx.shadowColor = '#00F5A0';
+      ctx.beginPath();
+      ctx.arc(dot[0], dot[1], 5.5, 0, Math.PI * 2);
+      ctx.fillStyle = '#00F5A0';
+      ctx.fill();
+      ctx.shadowBlur = 0;
+      ctx.beginPath();
+      ctx.arc(dot[0], dot[1], 2.2, 0, Math.PI * 2);
+      ctx.fillStyle = '#ffffff';
+      ctx.fill();
+      ctx.restore();
+
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  </script>
+
+</body>
+</html>

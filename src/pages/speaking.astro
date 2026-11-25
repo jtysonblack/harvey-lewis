@@ -81,6 +81,43 @@ const audiences = ['Corporate events', 'Running clubs & communities', 'Schools &
       </div>
     </section>
 
+    <!-- TED Talk -->
+    <section class="section ted-section">
+      <div class="container">
+        <div class="ted-inner">
+          <div class="ted-video">
+            <div class="video-embed__wrapper">
+              <iframe
+                src="https://www.youtube.com/embed/za92wxs9aQM"
+                title="Harvey Lewis — TED Talk"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+                loading="lazy"
+              ></iframe>
+            </div>
+          </div>
+          <div class="ted-text">
+            <p class="eyebrow">TED Talk</p>
+            <div class="divider"></div>
+            <h2 class="ted-heading serif">Watch Harvey Speak</h2>
+            <p class="ted-desc">
+              Harvey's TED Talk distills what 108 consecutive hours of running teaches you
+              about the limits of the human body — and what exists on the other side of them.
+            </p>
+            <a
+              href="https://youtu.be/za92wxs9aQM"
+              target="_blank"
+              rel="noopener"
+              class="btn btn--outline"
+              style="margin-top: 1.5rem;"
+            >
+              Watch on YouTube →
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Contact Form -->
     <section class="section form-section" id="contact">
       <div class="container">
@@ -181,6 +218,46 @@ const audiences = ['Corporate events', 'Running clubs & communities', 'Schools &
   }
 
   .topic-card__body {
+    color: var(--color-text-muted);
+    line-height: 1.75;
+    font-size: 0.9375rem;
+  }
+
+  /* TED Talk */
+  .ted-section {
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .ted-inner {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 3.5rem;
+    align-items: center;
+  }
+
+  .video-embed__wrapper {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+    background: var(--color-surface);
+  }
+
+  .video-embed__wrapper iframe {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    border: none;
+  }
+
+  .ted-heading {
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    margin-bottom: 1rem;
+    line-height: 1.3;
+  }
+
+  .ted-desc {
     color: var(--color-text-muted);
     line-height: 1.75;
     font-size: 0.9375rem;
@@ -315,6 +392,11 @@ const audiences = ['Corporate events', 'Running clubs & communities', 'Schools &
   }
 
   @media (max-width: 900px) {
+    .ted-inner {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+
     .form-wrapper {
       grid-template-columns: 1fr;
       gap: 3rem;
